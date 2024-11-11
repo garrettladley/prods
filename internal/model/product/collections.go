@@ -2,7 +2,7 @@ package product
 
 import "github.com/garrettladley/prods/internal/rand"
 
-func PickIDs(seed uint64, n uint) []string {
+func ChooseIDs(seed uint64, n uint) []string {
 	return rand.ChooseN(seed, n, IDs[:]...)
 }
 
