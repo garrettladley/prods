@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-
 	"net/url"
 
 	"github.com/garrettladley/prods/internal/model/applicant"
