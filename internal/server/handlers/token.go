@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
 
 	"github.com/garrettladley/prods/internal/model/applicant"
@@ -20,11 +19,9 @@ func (s *Service) Token(c *fiber.Ctx) error {
 	if err != nil {
 		return xerr.BadRequest(fmt.Errorf("failed to parse email. got: %s", email))
 	}
-
 	token, err := s.storage.Token(c.Context(), email)
 	if err != nil {
 		return err
 	}
-
-	return c.Status(http.StatusOK).SendString(token.String())
+	return c.Status(fiber.StatusOK).SendString(token.String())
 }

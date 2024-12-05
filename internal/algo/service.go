@@ -1,0 +1,138 @@
+package algo
+
+type Prompt struct {
+	ProductIDs []string `json:"product_ids"`
+}
+
+type Service struct {
+	numIDs uint
+}
+
+func NewService() *Service {
+	return &Service{}
+}
+
+// func (s *Service) Check(ctx context.Context, expected ordered_set.OrderedSet[movie.ID], actual ordered_set.OrderedSet[movie.ID]) int {
+// 	return ordered_set.Distance(expected, actual)
+// }
+
+// var orderedRatings = ordered_set.New(pref_gen.Ratings...)
+
+// type movieScore struct {
+// 	id    movie.ID
+// 	score uint32
+// }
+
+// func (s *Service) Solution(ctx context.Context, movies ordered_set.OrderedSet[movie.ID], people []pref_gen.Person) (ordered_set.OrderedSet[movie.ID], error) {
+// 	var wg sync.WaitGroup
+
+// 	scores := make([]movieScore, len(movies.Slice()))
+// 	errChan := make(chan error, len(movies.Slice()))
+
+// 	for index, id := range movies.Slice() {
+// 		wg.Add(1)
+// 		go func(index int, id movie.ID) {
+// 			defer wg.Done()
+// 			score, err := s.calculateScoreForMovie(ctx, id, people)
+// 			if err != nil {
+// 				errChan <- fmt.Errorf("failed to calculate score for movie %s: %w", id, err)
+// 				return
+// 			}
+// 			scores[index] = score
+// 		}(index, id)
+// 	}
+
+// 	wg.Wait()
+// 	close(errChan)
+
+// 	if len(errChan) > 0 {
+// 		return ordered_set.OrderedSet[movie.ID]{}, <-errChan
+// 	}
+
+// 	sortScores(scores)
+// 	return extractMovieIDs(scores), nil
+// }
+
+// func (s *Service) calculateScoreForMovie(ctx context.Context, id movie.ID, people []pref_gen.Person) (movieScore, error) {
+// 	om, err := s.client.FindMovieById(ctx, string(id))
+// 	if err != nil {
+// 		return movieScore{id: id}, fmt.Errorf("error finding movie by ID: %w", err)
+// 	}
+
+// 	m := movie.FromOMDB(om)
+
+// 	var totalScore atomic.Uint32
+// 	var wg sync.WaitGroup
+
+// 	for _, person := range people {
+// 		wg.Add(1)
+// 		go func(person pref_gen.Person) {
+// 			defer wg.Done()
+// 			personScore := calculatePersonScore(m, person)
+// 			totalScore.Add(personScore)
+// 		}(person)
+// 	}
+
+// 	wg.Wait()
+
+// 	return movieScore{id: id, score: uint32(totalScore.Load())}, nil
+// }
+
+// func calculatePersonScore(m movie.Movie, person pref_gen.Person) uint32 {
+// 	var score uint
+
+// 	if person.Preferences.AfterYear != nil && m.Year >= person.Preferences.AfterYear.Value {
+// 		score += person.Preferences.AfterYear.Weight
+// 	}
+// 	if person.Preferences.BeforeYear != nil && m.Year < person.Preferences.BeforeYear.Value {
+// 		score += person.Preferences.BeforeYear.Weight
+// 	}
+
+// 	if person.Preferences.MaximumAgeRating != nil {
+// 		max := slices.Index(orderedRatings.Slice(), string(person.Preferences.MaximumAgeRating.Value))
+// 		actual := slices.Index(orderedRatings.Slice(), m.AgeRating)
+// 		if max != -1 && actual != -1 && actual <= max {
+// 			score += person.Preferences.MaximumAgeRating.Weight
+// 		}
+// 	}
+
+// 	if person.Preferences.ShorterThan != nil && m.Duration < person.Preferences.ShorterThan.Value {
+// 		score += person.Preferences.ShorterThan.Weight
+// 	}
+
+// 	if person.Preferences.FavoriteGenre != nil && slices.Contains(m.Genres, person.Preferences.FavoriteGenre.Value) {
+// 		score += person.Preferences.FavoriteGenre.Weight
+// 	}
+
+// 	if person.Preferences.LeastFavoriteDirector != nil && slices.Contains(m.Directors, person.Preferences.LeastFavoriteDirector.Value) {
+// 		score -= person.Preferences.LeastFavoriteDirector.Weight
+// 	}
+
+// 	if person.Preferences.FavoriteActors != nil {
+// 		score += person.Preferences.FavoriteActors.Weight * utilities.IntersectionCardinality(m.Actors, person.Preferences.FavoriteActors.Value)
+// 	}
+
+// 	if person.Preferences.FavoritePlotElements != nil {
+// 		score += person.Preferences.FavoritePlotElements.Weight * utilities.IntersectionCardinality(m.Plot, person.Preferences.FavoritePlotElements.Value)
+// 	}
+
+// 	if person.Preferences.MinimumRottenTomatoesScore != nil && m.RottenTomatoesScore >= person.Preferences.MinimumRottenTomatoesScore.Value {
+// 		score -= person.Preferences.MinimumRottenTomatoesScore.Weight
+// 	}
+
+// 	return uint32(score)
+// }
+
+// func sortScores(scores []movieScore) {
+// 	slices.SortFunc(scores, func(a, b movieScore) int {
+// 		return int(b.score - a.score)
+// 	})
+// }
+
+// func extractMovieIDs(scores []movieScore) ordered_set.OrderedSet[movie.ID] {
+// 	result := make([]movie.ID, 0, len(scores))
+// 	for _, s := range scores {
+// 		result = append(result, s.id)
+// 	}
+// 	return ordered_set.New(result...)
+// }

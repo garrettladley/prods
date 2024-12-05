@@ -1,9 +1,77 @@
 package product
 
-import "github.com/garrettladley/prods/internal/rand"
+import (
+	"github.com/garrettladley/prods/internal/model/category"
+	"github.com/garrettladley/prods/internal/rand"
+	exprand "golang.org/x/exp/rand"
+)
 
 func ChooseIDs(seed uint64, n uint) []string {
 	return rand.ChooseN(seed, n, IDs[:]...)
+}
+
+var categoryToProducts = initCategoryMap()
+
+func initCategoryMap() map[category.Category][]string {
+	m := make(map[category.Category][]string)
+	for _, productID := range IDs {
+		product := Products[productID]
+		for _, cat := range product.Categories {
+			m[cat] = append(m[cat], productID)
+		}
+	}
+	return m
+}
+
+func ChooseIDsRepresentingAllCategories(seed uint64, n uint) []string {
+	if n < uint(len(category.Categories)) {
+		return nil
+	}
+
+	selected := make(map[string]bool)
+	result := make([]string, 0, n)
+
+	exprand.Seed(seed)
+	for _, cat := range category.Categories {
+		products := categoryToProducts[cat]
+		if len(products) == 0 {
+			continue
+		}
+
+		var found bool
+		for _, i := range exprand.Perm(len(products)) {
+			if !selected[products[i]] {
+				selected[products[i]] = true
+				result = append(result, products[i])
+				found = true
+				break
+			}
+		}
+
+		if !found && len(products) > 0 {
+			randProduct := products[exprand.Intn(len(products))]
+			if !selected[randProduct] {
+				selected[randProduct] = true
+				result = append(result, randProduct)
+			}
+		}
+	}
+
+	remainingProducts := make([]string, 0)
+	for _, id := range IDs {
+		if !selected[id] {
+			remainingProducts = append(remainingProducts, id)
+		}
+	}
+
+	neededCount := int(n) - len(result)
+	if neededCount > 0 && len(remainingProducts) > 0 {
+		for _, i := range exprand.Perm(len(remainingProducts))[:min(neededCount, len(remainingProducts))] {
+			result = append(result, remainingProducts[i])
+		}
+	}
+
+	return result
 }
 
 var IDs = [100]string{
@@ -210,4 +278,11 @@ var Products = map[string]Product{
 	PlaymobilCastle.ID:           PlaymobilCastle,
 	GatoradePack.ID:              GatoradePack,
 	HersheysChocolateBar.ID:      HersheysChocolateBar,
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
