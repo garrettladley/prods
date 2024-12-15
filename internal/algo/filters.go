@@ -16,10 +16,16 @@ func newFilter(opts ...filter.Option) *filter.Params {
 	return filter.New(append(opts, allFilters[:]...)...)
 }
 
+// TODO: use
+//
+//nolint:unused
 var filters = [...]*filter.Params{
 	// basic sort
 	newFilter(filter.Sort(filter.Price, filter.Asc)),
 	newFilter(filter.Sort(filter.Price, filter.Desc)),
+	newFilter(filter.Sort(filter.Name, filter.Asc)),
+	newFilter(filter.Sort(filter.Name, filter.Desc)),
+	newFilter(filter.Sort(filter.Star, filter.Asc)),
 	newFilter(filter.Sort(filter.Star, filter.Desc)),
 	// basic pagination
 	newFilter(filter.Paginate(0, ProductSubset+5)),
