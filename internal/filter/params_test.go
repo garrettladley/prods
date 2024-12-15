@@ -196,7 +196,6 @@ func TestQueryParser(t *testing.T) {
 				}
 				compareParams(t, tt.expectedParams, p)
 			}
-
 		})
 	}
 }
