@@ -5,7 +5,7 @@ type Category string
 const (
 	Electronics    Category = "electronics"
 	Apparel        Category = "apparel"
-	HomeGoods      Category = "home hoods"
+	HomeGoods      Category = "home goods"
 	Sports         Category = "sports"
 	Beauty         Category = "beauty"
 	Grocery        Category = "grocery"

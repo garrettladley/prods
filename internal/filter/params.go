@@ -59,28 +59,52 @@ func (p *Params) Encode() string {
 	return url.Encode()
 }
 
+// check if the query params are valid
+// for those with default values, set them if they are not provided
 func (p *Params) Validate() map[string]string {
 	errs := make(map[string]string)
 
-	if !slices.Contains(SortByValues, p.Sort) {
-		errs["sort"] = "invalid sort value"
+	if p.Sort != "" {
+		if !slices.Contains(SortByValues, p.Sort) {
+			errs["sort"] = "invalid sort value"
+		}
+	} else {
+		p.Sort = Name
 	}
 
-	if !slices.Contains(OrderValues, p.Order) {
-		errs["order"] = "invalid order value"
+	if p.Order != "" {
+		if !slices.Contains(OrderValues, p.Order) {
+			errs["order"] = "invalid order value"
+		}
+	} else {
+		p.Order = Asc
 	}
 
-	if len(p.Categories) > 0 {
+	if len(p.Categories) != 0 {
 		for _, c := range p.Categories {
 			if !slices.Contains(category.Categories[:], c) {
 				errs["categories"] = "invalid category value"
 				break
 			}
 		}
+	} else {
+		p.Categories = category.Categories[:]
+	}
+
+	if p.Limit == 0 {
+		p.Limit = 3
+	}
+
+	if p.PriceMax == 0 {
+		p.PriceMax = ^uint32(0)
 	}
 
 	if p.PriceMin > p.PriceMax {
 		errs["price_min"] = "price_min must be less than price_max"
+	}
+
+	if p.StarMax == 0 {
+		p.StarMax = 500
 	}
 
 	if p.StarMin > p.StarMax {

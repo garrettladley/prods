@@ -5,6 +5,7 @@ import (
 
 	"github.com/garrettladley/prods/internal/algo"
 	"github.com/garrettladley/prods/internal/filter"
+	"github.com/garrettladley/prods/internal/model/product"
 	"github.com/garrettladley/prods/internal/xerr"
 	"github.com/gofiber/fiber/v2"
 )
@@ -21,9 +22,11 @@ func (s *Service) Products(c *fiber.Ctx) error {
 		return xerr.InvalidRequestData(errors)
 	}
 
-	if params.Limit == 0 {
-		params.Limit = 3
+	ids := algo.AllProducts.ApplyFilter(&params)
+	products := make([]product.Product, len(ids))
+	for i, id := range ids {
+		products[i] = product.Products[id]
 	}
 
-	return c.Status(fiber.StatusOK).JSON(algo.AllProducts.ApplyFilter(&params))
+	return c.Status(fiber.StatusOK).JSON(products)
 }
