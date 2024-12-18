@@ -8,5 +8,7 @@ const (
 	Patch uint = 0
 )
 
-var Version = fmt.Sprintf("%d.%d.%d", Major, Minor, Patch)
-var APIVersion = fmt.Sprintf("/api/v%d", Major)
+var (
+	Version    = fmt.Sprintf("%d.%d.%d", Major, Minor, Patch)
+	APIVersion = fmt.Sprintf("/api/v%d", Major)
+)
