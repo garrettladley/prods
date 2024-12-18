@@ -56,11 +56,6 @@ func (s *Service) Register(c *fiber.Ctx) error {
 		prompt = s.algo.Generate(uint64(now.UnixNano()))
 	)
 
-	solution, err := s.algo.Solution(c.Context(), *prompt)
-	if err != nil {
-		return err
-	}
-
 	if err := s.storage.Register(
 		c.Context(),
 		storage.Register{
@@ -69,7 +64,7 @@ func (s *Service) Register(c *fiber.Ctx) error {
 			CreatedAt: now,
 			Token:     token,
 			Prompt:    *prompt,
-			Solution:  solution,
+			Solution:  s.algo.Solution(c.Context(), *prompt),
 		},
 	); err != nil {
 		return err

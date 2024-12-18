@@ -18,8 +18,10 @@ type Service struct {
 	numIDs uint
 }
 
-func NewService() *Service {
-	return &Service{}
+func NewService(numIDs uint) *Service {
+	return &Service{
+		numIDs: numIDs,
+	}
 }
 
 func (s *Service) Score(ctx context.Context, expected Solution, actual [][]product.Product) int {
@@ -52,6 +54,11 @@ func (s *Service) Score(ctx context.Context, expected Solution, actual [][]produ
 	return score
 }
 
-func (s *Service) Solution(ctx context.Context, p Prompt) (Solution, error) {
-	return Solution{}, nil
+func (s *Service) Solution(ctx context.Context, p Prompt) Solution {
+	soln := make([][]string, len(p.ProductIDs))
+	pf := NewProductFilter(p.ProductIDs)
+	for idx, filter := range Filters {
+		soln[idx] = pf.ApplyFilter(filter)
+	}
+	return Solution{OrderedProductIDs: soln}
 }
