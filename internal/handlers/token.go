@@ -24,7 +24,7 @@ import (
 //	@Failure		404		{object}	xerr.APIError	"Email not found"
 //	@Failure		429		{object}	xerr.APIError	"Too many requests"
 //	@Failure		500		{object}	xerr.APIError	"Internal server error"
-//	@Router			/api/v1/token/{email} [get]
+//	@Router			/api/v1/token [get]
 func (s *Service) Token(c *fiber.Ctx) error {
 	rawEmail := c.Query("email")
 	unescapedEmail, err := url.QueryUnescape(rawEmail)
