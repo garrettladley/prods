@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
-
 	"net/http"
 
 	"github.com/garrettladley/prods/internal/xslog"
