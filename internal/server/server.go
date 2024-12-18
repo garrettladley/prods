@@ -90,7 +90,6 @@ func setupFavicon(app *fiber.App) {
 	})
 }
 
-// TODO: create templ view
 func setup404Handler(app *fiber.App) {
 	app.Use(func(c *fiber.Ctx) error {
 		return xtempl.Render(c, x404.Index())
