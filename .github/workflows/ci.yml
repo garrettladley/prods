@@ -5,9 +5,9 @@ permissions: read-all
 on:
   push:
     paths:
-      - '**/*.go'
-      - go.mod
-      - go.sum
+      - cmd/**
+      - internal/**
+      - Makefile
       - .github/workflows/ci.yml
 
 concurrency:
@@ -78,6 +78,12 @@ jobs:
         with:
           path: ${{ steps.go-cache-paths.outputs.go-mod }}
           key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+      - name: Install Make
+        run: sudo apt-get install make
+      - name: make install
+        run: make install
+      - name: make ci-scaffold
+        run : make ci-scaffold
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v5
         with:
@@ -110,6 +116,12 @@ jobs:
         with:
           path: ${{ steps.go-cache-paths.outputs.go-mod }}
           key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+      - name: Install Make
+        run: sudo apt-get install make
+      - name: make install
+        run: make install
+      - name: make ci-scaffold
+        run : make ci-scaffold
       - name: Run Tests with Coverage
         run: go test -v -race -coverprofile=coverage.txt ./...
       - name: Print Coverage
