@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// TODO: document me
 func (s *Service) Products(c *fiber.Ctx) error {
 	var params filter.Params
 	if c.QueryParser(&params) != nil {
@@ -20,7 +21,7 @@ func (s *Service) Products(c *fiber.Ctx) error {
 		return xerr.InvalidRequestData(errors)
 	}
 
-	if params.Limit < 0 {
+	if params.Limit == 0 {
 		params.Limit = 3
 	}
 

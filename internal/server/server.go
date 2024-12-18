@@ -35,6 +35,7 @@ type Config struct {
 	StaticFn func(*fiber.App)
 }
 
+// TODO: cache
 func New(cfg *Config) *fiber.App {
 	app := fiber.New(fiber.Config{
 		JSONEncoder:       go_json.Marshal,
