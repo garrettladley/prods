@@ -5,6 +5,7 @@ go 1.23.2
 require (
 	github.com/goccy/go-json v0.10.3
 	github.com/gofiber/fiber/v2 v2.52.5
+	github.com/swaggo/swag v1.16.3
 	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f
 )
 
@@ -19,7 +20,6 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/swaggo/files/v2 v2.0.0 // indirect
-	github.com/swaggo/swag v1.16.3 // indirect
 	go.opentelemetry.io/otel v1.29.0 // indirect
 	go.opentelemetry.io/otel/trace v1.29.0 // indirect
 	golang.org/x/net v0.31.0 // indirect

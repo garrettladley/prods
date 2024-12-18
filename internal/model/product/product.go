@@ -7,11 +7,11 @@ import (
 )
 
 type Product struct {
-	ID         string              // 8 runes, alphanumeric, case sensitive
-	Name       string              // name of the product
-	Categories []category.Category // between 1-3 categories
-	Stars      uint16              // representation of 0-5 stars, 2 decimal places
-	Price      uint32              // representation in cents
+	ID         string              `json:"id"`         // 8 runes, alphanumeric, case sensitive
+	Name       string              `json:"name"`       // name of the product
+	Categories []category.Category `json:"categories"` // between 1-3 categories
+	Stars      uint16              `json:"stars"`      // representation of 0-5 stars, 2 decimal places
+	Price      uint32              `json:"price"`      // representation in cents
 }
 
 func (p *Product) Equals(other Product) bool {
