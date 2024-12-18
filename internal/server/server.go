@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -35,7 +34,6 @@ type Config struct {
 	StaticFn func(*fiber.App)
 }
 
-// TODO: cache
 func New(cfg *Config) *fiber.App {
 	app := fiber.New(fiber.Config{
 		JSONEncoder:       go_json.Marshal,
@@ -48,7 +46,7 @@ func New(cfg *Config) *fiber.App {
 	setupFavicon(app)
 
 	service := handlers.NewService(cfg.Storage)
-	app.Get(fmt.Sprintf("/api/v%d/docs/*", constants.Major), swagger.HandlerDefault)
+	app.Get(constants.APIVersion+"/docs/*", swagger.HandlerDefault)
 	service.Routes(app)
 	cfg.StaticFn(app)
 

@@ -9,3 +9,4 @@ const (
 )
 
 var Version = fmt.Sprintf("%d.%d.%d", Major, Minor, Patch)
+var APIVersion = fmt.Sprintf("/api/v%d", Major)

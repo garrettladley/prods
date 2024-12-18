@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/garrettladley/prods/internal/constants"
@@ -20,7 +19,7 @@ func (s *Service) Routes(r fiber.Router) {
 	r.Get("/", cache, s.Home)
 	r.Get("/frontend", cache, s.Frontend)
 
-	r.Route(fmt.Sprintf("/api/v%d", constants.Major), func(router fiber.Router) {
+	r.Route(constants.APIVersion, func(router fiber.Router) {
 		r.Post("/register", s.Register)
 		r.Get("/token", s.Token)
 
