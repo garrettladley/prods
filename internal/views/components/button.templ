@@ -1,0 +1,10 @@
+package components
+
+templ Button(href string, text string) {
+	<a
+		href={ templ.SafeURL(href) }
+		class="bg-blue-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 text-lg group"
+	>
+		{ text } <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+	</a>
+}
