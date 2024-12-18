@@ -6,6 +6,7 @@ import (
 	"github.com/garrettladley/prods/internal/constants"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
+	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/utils"
 )
 
@@ -16,8 +17,13 @@ func (s *Service) Routes(r fiber.Router) {
 		CacheControl: true,
 	})
 
-	r.Get("/", cache, s.Home)
-	r.Get("/frontend", cache, s.Frontend)
+	r.Route("/", func(router fiber.Router) {
+		r.Use(etag.New())
+		r.Use(cache)
+		r.Get("/", s.Home)
+		r.Get("/frontend", s.Frontend)
+		r.Get("/backend", s.Backend)
+	})
 
 	r.Route(constants.APIVersion, func(r fiber.Router) {
 		r.Post("/register", s.Register)

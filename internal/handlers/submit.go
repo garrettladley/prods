@@ -27,8 +27,9 @@ type submitRequestBody struct {
 //
 //	@Summary		Submit and score a solution
 //	@Description	Scores a solution by hitting the provided endpoint and checking against the expected solution.
-//	@Description	Note: Before checking your solution, we will make a GET request to the provided URL's `/health` endpoint.
+//	@Description	Before checking your solution, we will make a GET request to the provided URL's `/health` endpoint.
 //	@Description	If this request does not return a 200 status code, the scoring process will exit, and you will receive a score of -1.
+//	@Description	Your endpoint should be located at URL+"/api/v1/products".
 //	@Tags			solutions
 //	@Accept			json
 //	@Produce		json

@@ -3,7 +3,6 @@ package server
 import (
 	"log/slog"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/garrettladley/prods/internal/constants"
@@ -18,7 +17,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
-	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 
 	_ "embed"
@@ -49,7 +48,7 @@ func New(cfg *Config) *fiber.App {
 	setupFavicon(app)
 
 	service := handlers.NewService(cfg.Storage)
-	app.Get(constants.APIVersion+"/docs/*", swagger.HandlerDefault)
+	app.Get(constants.APIVersion+"/docs/*", etag.New(), swagger.HandlerDefault)
 	service.Routes(app)
 	cfg.StaticFn(app)
 
@@ -68,13 +67,6 @@ func setupMiddleware(app *fiber.App, cfg *Config) {
 	}))
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestSpeed,
-	}))
-	app.Use(cors.New(cors.Config{
-		AllowOrigins:     strings.Join([]string{"https://prods.garrettladley.com", "http://prods.garrettladley.com", "http://127.0.0.1"}, ","),
-		AllowMethods:     strings.Join([]string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodOptions}, ","),
-		AllowHeaders:     strings.Join([]string{"Accept", "Authorization", "Content-Type"}, ","),
-		AllowCredentials: true,
-		MaxAge:           300,
 	}))
 }
 

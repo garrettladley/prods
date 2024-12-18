@@ -1,0 +1,98 @@
+package backend
+
+import "github.com/garrettladley/prods/internal/views/layouts"
+
+templ Index() {
+	@layouts.Base() {
+		<div class="max-w-5xl mx-auto px-4 py-8 space-y-8">
+			<header>
+				<h1 class="text-4xl font-bold text-blue-600">Backend Challenge</h1>
+			</header>
+			<section>
+				<h2 class="text-2xl font-semibold mb-4">Overview</h2>
+				<p class="leading-relaxed">
+					For the backend challenge, you will implement a simple <span class="font-mono text-blue-500">/api/v1/products</span> endpoint. Your implementation should match the features of the endpoint documented <a href="/api/v1/docs/index.html#/products" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">here</a>.
+					Feel free to use any tech stack you think would be best.
+				</p>
+			</section>
+			<section>
+				<h2 class="text-2xl font-semibold mb-4">Workflow</h2>
+				<div class="mb-4">
+					<h3 class="text-xl font-semibold mb-4">Register</h3>
+					<p>
+						Register for the challenge. Upon registering, you will receive a unique subset of the products, which you will use to implement the <span class="font-mono text-blue-500">/api/v1/products</span> endpoint.
+					</p>
+					<ul class="list-disc list-inside pl-4 space-y-2">
+						<li>
+							<a href="/api/v1/docs/index.html#/applicants/post_api_v1_register" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">API Docs</a>
+						</li>
+					</ul>
+				</div>
+				<div class="mb-4">
+					<h3 class="text-xl font-semibold mb-4">Implementation</h3>
+					<p>
+						Implement the <span class="font-mono text-blue-500">/api/v1/products</span> endpoint. Consider writing some tests. When submitting, you will provide us with a public URL to hit your endpoint and run some tests.
+					</p>
+					<ul class="list-disc list-inside pl-4 space-y-2">
+						<li>
+							Implement the <span class="font-mono text-blue-500">/api/v1/products</span> endpoint. Consider writing some tests.
+						</li>
+						<li>
+							Use <a href="#ngrok" class="text-blue-400 hover:underline">ngrok</a> to securely expose your local server to the Internet with minimal effort.
+						</li>
+					</ul>
+				</div>
+				<div class="mb-4">
+					<h3 class="text-xl font-semibold mb-4">Submit</h3>
+					<p>
+						Submit your solution and receive a score. A score of <code>-1</code> indicates an ungradable submission (e.g., server unreachable or data length mismatch). Scoring works like golf: lower is better. A score of <code>0</code> means your implementation aligns with the our approach.
+					</p>
+					<ul class="list-disc list-inside pl-4 space-y-2">
+						<li>
+							<a href="/api/v1/docs/index.html#/solutions/post_api_v1__token__submit" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">API Docs</a>
+						</li>
+					</ul>
+				</div>
+				<div class="mb-4">
+					<h3 class="text-xl font-semibold mb-4">Help</h3>
+					<p>
+						Need help? We've got you covered.
+					</p>
+					<ul class="list-disc list-inside pl-4 space-y-2">
+						<li>
+							<a href="/api/v1/docs/index.html#/applicants/get_api_v1_token__email_" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">
+								Forgot Token?
+							</a>
+						</li>
+						<li>
+							<a href="/api/v1/docs/index.html#/applicants/get_api_v1__token__prompt" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">
+								Lost Prompt?
+							</a>
+						</li>
+					</ul>
+				</div>
+			</section>
+			<section>
+				<h2 class="text-2xl font-semibold mb-4">Implementation Considerations</h2>
+				<ul class="list-disc list-inside space-y-2">
+					<li>Focus on creating a clean, efficient implementation of the <span class="font-mono text-blue-500">/api/v1/products</span> endpoint.</li>
+					<li>Ensure your solution handles the specific subset of products you receive during registration.</li>
+					<li>Consider performance, error handling, and code readability.</li>
+					<li>If you have time, write some tests to validate your endpoint's functionality.</li>
+					<li>This is designed to take between 1.5-2.5 hours to complete. If you complete it under that time, awesome! If you don't, no worries—try to cap yourself at 3 hours.</li>
+					<li>Finally, reach out to Garrett Ladley at ladley [dot] g [at] northeastern [dot] edu if you have any questions.</li>
+				</ul>
+			</section>
+			<section>
+				<h2 class="text-2xl font-semibold mb-4">Helpful Documentation</h2>
+				<ul class="list-disc list-inside space-y-2">
+					<li id="ngrok">
+						<a href="https://ngrok.com/docs/getting-started/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">
+							ngrok Quickstart
+						</a>
+					</li>
+				</ul>
+			</section>
+		</div>
+	}
+}

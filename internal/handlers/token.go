@@ -18,7 +18,7 @@ import (
 //
 //	@Tags			applicants
 //	@Produce		plain
-//	@Param			email	path		string			true	"Email"	format(email)
+//	@Param			email	query		string			true	"Email"	format(email)
 //	@Success		200		{string}	string			"Successfully retrieved token"
 //	@Failure		400		{object}	xerr.APIError	"Invalid email format"
 //	@Failure		404		{object}	xerr.APIError	"Email not found"
