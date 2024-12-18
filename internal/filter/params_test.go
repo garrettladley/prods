@@ -1,6 +1,7 @@
 package filter
 
 import (
+	"fmt"
 	"net/http/httptest"
 	"slices"
 	"testing"
@@ -36,7 +37,7 @@ func TestParamsEncode(t *testing.T) {
 				StarMin:    300,
 				StarMax:    500,
 			},
-			expected: "categories=books&categories=electronics&limit=20&offset=10&order=asc&price_max=5000&price_min=1000&sort=price&star_max=500&star_min=300",
+			expected: "categories=books,electronics&limit=20&offset=10&order=asc&price_max=5000&price_min=1000&sort=price&star_max=500&star_min=300",
 		},
 		{
 			name: "only sort and order",
@@ -97,6 +98,7 @@ func TestParamsEncode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := tt.params.Encode()
+			fmt.Println(got)
 			if got != tt.expected {
 				t.Errorf("Params.Encode() = %v, want %v", got, tt.expected)
 			}

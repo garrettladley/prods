@@ -1,11 +1,13 @@
 package filter
 
 import (
-	"net/url"
+	stdurl "net/url"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/garrettladley/prods/internal/model/category"
+	"github.com/garrettladley/prods/internal/xurl"
 )
 
 // TODO: rename
@@ -26,35 +28,37 @@ type Params struct {
 }
 
 func (p *Params) Encode() string {
-	url := make(url.Values)
+	url := make(xurl.Values)
 	if p.Sort != "" {
-		url.Add("sort", string(p.Sort))
+		url.AddEscape("sort", string(p.Sort))
 	}
 	if p.Order != "" {
-		url.Add("order", string(p.Order))
+		url.AddEscape("order", string(p.Order))
 	}
 	if len(p.Categories) > 0 {
-		for _, c := range p.Categories {
-			url.Add("categories", string(c))
+		categoryStrings := make([]string, len(p.Categories))
+		for i, c := range p.Categories {
+			categoryStrings[i] = stdurl.QueryEscape(string(c))
 		}
+		url.Add("categories", strings.Join(categoryStrings, ","))
 	}
 	if p.Offset > 0 {
-		url.Add("offset", strconv.Itoa(int(p.Offset)))
+		url.AddEscape("offset", strconv.Itoa(int(p.Offset)))
 	}
 	if p.Limit > 0 {
-		url.Add("limit", strconv.Itoa(int(p.Limit)))
+		url.AddEscape("limit", strconv.Itoa(int(p.Limit)))
 	}
 	if p.PriceMin > 0 {
-		url.Add("price_min", strconv.Itoa(int(p.PriceMin)))
+		url.AddEscape("price_min", strconv.Itoa(int(p.PriceMin)))
 	}
 	if p.PriceMax > 0 {
-		url.Add("price_max", strconv.Itoa(int(p.PriceMax)))
+		url.AddEscape("price_max", strconv.Itoa(int(p.PriceMax)))
 	}
 	if p.StarMin > 0 {
-		url.Add("star_min", strconv.Itoa(int(p.StarMin)))
+		url.AddEscape("star_min", strconv.Itoa(int(p.StarMin)))
 	}
 	if p.StarMax > 0 {
-		url.Add("star_max", strconv.Itoa(int(p.StarMax)))
+		url.AddEscape("star_max", strconv.Itoa(int(p.StarMax)))
 	}
 	return url.Encode()
 }
@@ -80,11 +84,23 @@ func (p *Params) Validate() map[string]string {
 		p.Order = Asc
 	}
 
+	// don't love but we gotta make it work
 	if len(p.Categories) != 0 {
-		for _, c := range p.Categories {
-			if !slices.Contains(category.Categories[:], c) {
-				errs["categories"] = "invalid category value"
-				break
+		rawCategory, err := stdurl.QueryUnescape(string(p.Categories[0]))
+		if err != nil {
+			errs["categories"] = "invalid category value"
+		} else {
+			split := strings.Split(rawCategory, ",")
+			categories := make([]category.Category, len(split))
+			for idx, c := range split {
+				categories[idx] = category.Category(c)
+			}
+			p.Categories = categories
+			for _, c := range p.Categories {
+				if !slices.Contains(category.Categories[:], c) {
+					errs["categories"] = "invalid category value"
+					break
+				}
 			}
 		}
 	} else {
