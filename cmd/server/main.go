@@ -9,6 +9,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/garrettladley/prods/docs"
+	"github.com/garrettladley/prods/internal/constants"
 	"github.com/garrettladley/prods/internal/server"
 	"github.com/garrettladley/prods/internal/settings"
 	"github.com/garrettladley/prods/internal/storage/postgres"
@@ -30,9 +32,13 @@ import (
 //	@host		prods.garrettladley.com
 //	@BasePath	/
 
+// @schemes	http https
+
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
+	docs.SwaggerInfo.Version = constants.Version
+
 	handler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	})

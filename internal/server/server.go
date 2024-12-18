@@ -48,7 +48,7 @@ func New(cfg *Config) *fiber.App {
 	setupFavicon(app)
 
 	service := handlers.NewService(cfg.Storage)
-	app.Get(fmt.Sprintf("/api/v%d/docs/*", constants.Version), swagger.HandlerDefault)
+	app.Get(fmt.Sprintf("/api/v%d/docs/*", constants.Major), swagger.HandlerDefault)
 	service.Routes(app)
 	cfg.StaticFn(app)
 

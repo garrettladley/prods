@@ -13,7 +13,7 @@ func (s *Service) Routes(r fiber.Router) {
 		r.Get("/frontend", s.Frontend)
 	})
 
-	r.Route(fmt.Sprintf("/api/v%d", constants.Version), func(router fiber.Router) {
+	r.Route(fmt.Sprintf("/api/v%d", constants.Major), func(router fiber.Router) {
 		r.Post("/register", s.Register)
 		r.Get("/token", s.Token)
 
