@@ -32,7 +32,7 @@ import (
 //	@host		prods.garrettladley.com
 //	@BasePath	/
 
-// @schemes	http https
+// @schemes https http
 
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
