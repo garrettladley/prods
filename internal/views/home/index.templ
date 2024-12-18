@@ -1,6 +1,9 @@
 package home
 
-import "github.com/garrettladley/prods/internal/views/layouts"
+import (
+	"github.com/garrettladley/prods/internal/views/components"
+	"github.com/garrettladley/prods/internal/views/layouts"
+)
 
 templ Index() {
 	@layouts.Base() {
@@ -8,18 +11,9 @@ templ Index() {
 			<h1 class="text-4xl font-bold mb-8">Choose Your Challenge</h1>
 			<p class="text-xl text-gray-400 mb-12">Select the area you'd like to focus on for your Generate Challenge</p>
 			<div class="flex justify-center space-x-8">
-				@button("/backend", "Backend Challenge")
-				@button("/frontend", "Frontend Challenge")
+				@components.Button("/backend", "Backend Challenge")
+				@components.Button("/frontend", "Frontend Challenge")
 			</div>
 		</div>
 	}
-}
-
-templ button(href string, text string) {
-	<a
-		href={ templ.SafeURL(href) }
-		class="bg-blue-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 text-lg group"
-	>
-		{ text } <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
-	</a>
 }
