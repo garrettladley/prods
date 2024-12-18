@@ -86,20 +86,24 @@ func (p *Params) Validate() map[string]string {
 
 	// don't love but we gotta make it work
 	if len(p.Categories) != 0 {
-		rawCategory, err := stdurl.QueryUnescape(string(p.Categories[0]))
-		if err != nil {
-			errs["categories"] = "invalid category value"
+		if len(p.Categories[0]) == 1 {
+			p.Categories = category.Categories[:]
 		} else {
-			split := strings.Split(rawCategory, ",")
-			categories := make([]category.Category, len(split))
-			for idx, c := range split {
-				categories[idx] = category.Category(c)
-			}
-			p.Categories = categories
-			for _, c := range p.Categories {
-				if !slices.Contains(category.Categories[:], c) {
-					errs["categories"] = "invalid category value"
-					break
+			rawCategory, err := stdurl.QueryUnescape(string(p.Categories[0]))
+			if err != nil {
+				errs["categories"] = "invalid category value"
+			} else {
+				split := strings.Split(rawCategory, ",")
+				categories := make([]category.Category, len(split))
+				for idx, c := range split {
+					categories[idx] = category.Category(c)
+				}
+				p.Categories = categories
+				for _, c := range p.Categories {
+					if !slices.Contains(category.Categories[:], c) {
+						errs["categories"] = "invalid category value"
+						break
+					}
 				}
 			}
 		}
