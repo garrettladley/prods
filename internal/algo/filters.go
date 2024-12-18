@@ -1,13 +1,14 @@
 package algo
 
 import (
+	"github.com/garrettladley/prods/internal/constants"
 	"github.com/garrettladley/prods/internal/filter"
 	"github.com/garrettladley/prods/internal/model/category"
 )
 
 var allFilters = [...]filter.Option{
 	filter.Categories(category.Categories[:]),
-	filter.Paginate(0, ProductSubset),
+	filter.Paginate(0, constants.ProductSubset),
 	filter.PriceBucketer(filter.AllPriceBuckets),
 	filter.StarBucketer(filter.AllStars),
 }
@@ -16,10 +17,7 @@ func newFilter(opts ...filter.Option) *filter.Params {
 	return filter.New(append(opts, allFilters[:]...)...)
 }
 
-// TODO: use
-//
-//nolint:unused
-var filters = [...]*filter.Params{
+var Filters = [...]*filter.Params{
 	// basic sort
 	newFilter(filter.Sort(filter.Price, filter.Asc)),
 	newFilter(filter.Sort(filter.Price, filter.Desc)),
@@ -28,11 +26,11 @@ var filters = [...]*filter.Params{
 	newFilter(filter.Sort(filter.Star, filter.Asc)),
 	newFilter(filter.Sort(filter.Star, filter.Desc)),
 	// basic pagination
-	newFilter(filter.Paginate(0, ProductSubset+5)),
-	newFilter(filter.Paginate(1, ProductSubset)),
-	newFilter(filter.Paginate(0, ProductSubset/3)),
-	newFilter(filter.Paginate(1, ProductSubset/3)),
-	newFilter(filter.Paginate(2, ProductSubset/3)),
+	newFilter(filter.Paginate(0, constants.ProductSubset+5)),
+	newFilter(filter.Paginate(1, constants.ProductSubset)),
+	newFilter(filter.Paginate(0, constants.ProductSubset/3)),
+	newFilter(filter.Paginate(1, constants.ProductSubset/3)),
+	newFilter(filter.Paginate(2, constants.ProductSubset/3)),
 	// single category
 	newFilter(filter.Categories([]category.Category{category.Electronics})),
 	newFilter(filter.Categories([]category.Category{category.Apparel})),
@@ -79,13 +77,21 @@ var filters = [...]*filter.Params{
 		filter.PriceBucketer(filter.TenToFifteen),
 		filter.StarBucketer(filter.FourPlus),
 		filter.Sort(filter.Price, filter.Desc),
-		filter.Paginate(0, ProductSubset-5),
+		filter.Paginate(0, constants.ProductSubset-5),
 	),
 	newFilter(
 		filter.Categories([]category.Category{category.Luxury, category.Beauty, category.Health}),
 		filter.PriceBucketer(filter.OverTwentyFive),
 		filter.StarBucketer(filter.FourPointFivePlus),
 		filter.Sort(filter.Star, filter.Desc),
-		filter.Paginate(0, ProductSubset+5),
+		filter.Paginate(0, constants.ProductSubset+5),
 	),
+}
+
+var EncodedFilters = make([]string, len(Filters))
+
+func init() {
+	for i, f := range Filters {
+		EncodedFilters[i] = f.Encode()
+	}
 }

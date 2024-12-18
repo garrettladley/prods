@@ -2,6 +2,7 @@ package filter
 
 import (
 	"net/url"
+	"slices"
 	"strconv"
 
 	"github.com/garrettladley/prods/internal/model/category"
@@ -12,7 +13,6 @@ type Params struct {
 	Sort  SortBy `query:"sort"`
 	Order Order  `query:"order"`
 
-	// TODO: will this work with c.QueryParser?
 	Categories []category.Category `query:"categories"`
 
 	Offset uint `query:"offset"`
@@ -57,4 +57,35 @@ func (p *Params) Encode() string {
 		url.Add("star_max", strconv.Itoa(int(p.StarMax)))
 	}
 	return url.Encode()
+}
+
+func (p *Params) Validate() map[string]string {
+	errs := make(map[string]string)
+
+	if !slices.Contains(SortByValues, p.Sort) {
+		errs["sort"] = "invalid sort value"
+	}
+
+	if !slices.Contains(OrderValues, p.Order) {
+		errs["order"] = "invalid order value"
+	}
+
+	if len(p.Categories) > 0 {
+		for _, c := range p.Categories {
+			if !slices.Contains(category.Categories[:], c) {
+				errs["categories"] = "invalid category value"
+				break
+			}
+		}
+	}
+
+	if p.PriceMin > p.PriceMax {
+		errs["price_min"] = "price_min must be less than price_max"
+	}
+
+	if p.StarMin > p.StarMax {
+		errs["star_min"] = "star_min must be less than star_max"
+	}
+
+	return errs
 }

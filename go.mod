@@ -14,7 +14,8 @@ require (
 )
 
 require (
-	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/a-h/templ v0.2.793
+	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/caarlos0/env/v11 v11.2.2
 	github.com/google/uuid v1.6.0
 	github.com/jmoiron/sqlx v1.4.0
@@ -30,5 +31,6 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/sync v0.10.0
+	golang.org/x/sys v0.23.0 // indirect
 )

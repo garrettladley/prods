@@ -12,6 +12,8 @@ type ProductFilter struct {
 	products []product.Product
 }
 
+var AllProducts = NewProductFilter(product.IDs[:])
+
 func NewProductFilter(ids []string) *ProductFilter {
 	products := make([]product.Product, len(ids))
 	for i, id := range ids {

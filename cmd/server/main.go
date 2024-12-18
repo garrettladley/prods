@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"embed"
 	"log/slog"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,6 +12,8 @@ import (
 	"github.com/garrettladley/prods/internal/server"
 	"github.com/garrettladley/prods/internal/settings"
 	"github.com/garrettladley/prods/internal/xslog"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/filesystem"
 )
 
 func main() {
@@ -35,6 +39,8 @@ func main() {
 	app := server.New(&server.Config{
 		Logger: logger,
 	})
+
+	static(app)
 
 	go func() {
 		if err := app.Listen(":" + settings.App.Port); err != nil {
@@ -73,4 +79,23 @@ func main() {
 		slog.LevelInfo,
 		"server shutdown",
 	)
+}
+
+//go:embed public
+var PublicFS embed.FS
+
+//go:embed deps
+var DepsFS embed.FS
+
+func static(app *fiber.App) {
+	app.Use("/public", filesystem.New(filesystem.Config{
+		Root:       http.FS(PublicFS),
+		PathPrefix: "public",
+		Browse:     true,
+	}))
+	app.Use("/deps", filesystem.New(filesystem.Config{
+		Root:       http.FS(DepsFS),
+		PathPrefix: "deps",
+		Browse:     true,
+	}))
 }

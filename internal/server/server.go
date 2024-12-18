@@ -1,10 +1,12 @@
 package server
 
 import (
+	"fmt"
 	"log/slog"
-	"net/http"
 	"time"
 
+	"github.com/garrettladley/prods/internal/constants"
+	"github.com/garrettladley/prods/internal/server/handlers"
 	"github.com/garrettladley/prods/internal/xerr"
 	go_json "github.com/goccy/go-json"
 
@@ -33,6 +35,16 @@ func New(cfg *Config) *fiber.App {
 	setupHealthCheck(app)
 
 	// register routes here before 404 handler
+	service := handlers.NewService(nil)
+	app.Route(fmt.Sprintf("/api/v%d", constants.Version), func(r fiber.Router) {
+		r.Post("/register", service.Register)
+		r.Get("/token", service.Token)
+		r.Route("/:token", func(r fiber.Router) {
+			r.Get("/prompt", service.Prompt)
+			r.Post("/submit", service.Submit)
+		})
+		r.Get("/products", service.Products)
+	})
 
 	setup404Handler(app)
 
@@ -54,7 +66,7 @@ func setupMiddleware(app *fiber.App, cfg *Config) {
 
 func setupHealthCheck(app *fiber.App) {
 	app.Get("/health", func(c *fiber.Ctx) error {
-		return c.SendStatus(http.StatusOK)
+		return c.SendStatus(fiber.StatusOK)
 	})
 }
 

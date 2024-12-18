@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+
 	"net/http"
 
 	"github.com/garrettladley/prods/internal/xslog"
@@ -36,6 +37,10 @@ func InvalidJSON() APIError {
 
 func NotFound(title string, withKey string, withValue any) APIError {
 	return NewAPIError(http.StatusNotFound, fmt.Errorf("%s with %s='%s' not found", title, withKey, withValue))
+}
+
+func Timeout(reason string) APIError {
+	return NewAPIError(http.StatusRequestTimeout, fmt.Errorf("timeout: %s", reason))
 }
 
 func Conflict(title string, withKey string, withValue any) APIError {

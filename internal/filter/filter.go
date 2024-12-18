@@ -12,12 +12,16 @@ const (
 	Star  SortBy = "star"
 )
 
+var SortByValues = []SortBy{Price, Name, Star}
+
 type Order string
 
 const (
 	Asc  Order = "asc"
 	Desc Order = "desc"
 )
+
+var OrderValues = []Order{Asc, Desc}
 
 type Filter struct {
 	p Params
