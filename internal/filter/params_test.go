@@ -1,7 +1,6 @@
 package filter
 
 import (
-	"fmt"
 	"net/http/httptest"
 	"slices"
 	"testing"
@@ -98,7 +97,6 @@ func TestParamsEncode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := tt.params.Encode()
-			fmt.Println(got)
 			if got != tt.expected {
 				t.Errorf("Params.Encode() = %v, want %v", got, tt.expected)
 			}

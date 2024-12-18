@@ -39,7 +39,7 @@ type submitRequestBody struct {
 //	@Failure		408		{object}	xerr.APIError		"Request timeout exceeded"
 //	@Failure		429		{object}	xerr.APIError		"Too many requests"
 //	@Failure		500		{object}	xerr.APIError		"Internal server error"
-//	@Router			/api/v1/submit/{token} [post]
+//	@Router			/api/v1/{token}/submit [post]
 func (s *Service) Submit(c *fiber.Ctx) error {
 	rawToken := c.Params("token")
 	token, err := uuid.Parse(rawToken)
@@ -53,20 +53,20 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 		return xerr.InvalidJSON()
 	}
 
-	ctx, cancel := context.WithTimeout(c.Context(), 30*time.Second)
+	baseCtx, cancel := context.WithTimeout(c.Context(), 30*time.Second)
 	defer cancel()
 
-	ok, err := health(ctx, r.URL)
+	ok, err := health(baseCtx, r.URL)
 	if err != nil || !ok {
 		score := -1
-		if err := s.storage.Submit(ctx, token, score); err != nil {
+		if err := s.storage.Submit(baseCtx, token, score); err != nil {
 			return err
 		}
 
 		return c.Status(http.StatusCreated).JSON(score)
 	}
 
-	eg, ctx := errgroup.WithContext(ctx)
+	eg, ctx := errgroup.WithContext(baseCtx)
 
 	var expected algo.Solution
 	eg.Go(func() error {
@@ -96,8 +96,8 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 		}
 	}
 
-	score := s.algo.Score(ctx, expected, actual)
-	if err := s.storage.Submit(ctx, token, score); err != nil {
+	score := s.algo.Score(baseCtx, expected, actual)
+	if err := s.storage.Submit(baseCtx, token, score); err != nil {
 		return err
 	}
 
@@ -128,7 +128,7 @@ func test(ctx context.Context, url string) ([][]product.Product, error) {
 	for idx, filter := range algo.EncodedFilters {
 		func(idx int, filter string) {
 			eg.Go(func() error {
-				req, err := http.NewRequestWithContext(ctx, http.MethodGet, url+filter, nil)
+				req, err := http.NewRequestWithContext(ctx, http.MethodGet, url+"/api/v1/products?"+filter, nil)
 				if err != nil {
 					return fmt.Errorf("failed to create request: %w", err)
 				}

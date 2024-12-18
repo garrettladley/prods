@@ -10,12 +10,12 @@ import (
 )
 
 func (db *DB) Register(ctx context.Context, r storage.Register) error {
-	marshalledPrompt, err := go_json.Marshal(r.Prompt)
+	marshalledPrompt, err := go_json.Marshal(r.Prompt.ProductIDs)
 	if err != nil {
 		return err
 	}
 
-	marshalledRanking, err := go_json.Marshal(r.Solution)
+	marshalledRanking, err := go_json.Marshal(r.Solution.OrderedProductIDs)
 	if err != nil {
 		return err
 	}

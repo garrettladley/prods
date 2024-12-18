@@ -38,7 +38,7 @@ func (p *Params) Encode() string {
 	if len(p.Categories) > 0 {
 		categoryStrings := make([]string, len(p.Categories))
 		for i, c := range p.Categories {
-			categoryStrings[i] = stdurl.QueryEscape(string(c))
+			categoryStrings[i] = strings.ReplaceAll(string(c), " ", "%20")
 		}
 		url.Add("categories", strings.Join(categoryStrings, ","))
 	}

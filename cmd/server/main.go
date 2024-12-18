@@ -40,7 +40,8 @@ func main() {
 	docs.SwaggerInfo.Version = constants.Version
 
 	handler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelDebug,
+		Level:     slog.LevelDebug,
+		AddSource: true,
 	})
 	logger := slog.New(handler)
 	slog.SetDefault(logger)

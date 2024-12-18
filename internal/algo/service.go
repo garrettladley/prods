@@ -30,7 +30,7 @@ func (s *Service) Score(ctx context.Context, expected Solution, actual [][]produ
 		return -1
 	}
 
-	var score int
+	var numCorrect int
 	for i, expectedIDs := range expected.OrderedProductIDs {
 		// just mark as wrong and continue
 		if len(expectedIDs) != len(actual[i]) {
@@ -47,18 +47,14 @@ func (s *Service) Score(ctx context.Context, expected Solution, actual [][]produ
 			}
 		}
 		if correct {
-			score++
+			numCorrect++
 		}
 	}
 
-	return score
+	return len(expected.OrderedProductIDs) - numCorrect
 }
 
 func (s *Service) Solution(ctx context.Context, p Prompt) Solution {
-	soln := make([][]string, len(p.ProductIDs))
 	pf := NewProductFilter(p.ProductIDs)
-	for idx, filter := range Filters {
-		soln[idx] = pf.ApplyFilter(filter)
-	}
-	return Solution{OrderedProductIDs: soln}
+	return Solution{OrderedProductIDs: pf.Solve(Filters[:])}
 }

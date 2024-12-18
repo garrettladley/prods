@@ -20,7 +20,7 @@ import (
 //	@Failure		404		{object}	xerr.APIError	"Token not found"
 //	@Failure		429		{object}	xerr.APIError	"Too many requests"
 //	@Failure		500		{object}	xerr.APIError	"Internal server error"
-//	@Router			/api/v1/prompt/{token} [get]
+//	@Router			/api/v1/{token}/prompt [get]
 func (s *Service) Prompt(c *fiber.Ctx) error {
 	rawToken := c.Params("token")
 	token, err := uuid.Parse(rawToken)

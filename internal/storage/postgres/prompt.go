@@ -20,12 +20,14 @@ func (db *DB) Prompt(ctx context.Context, token uuid.UUID) (algo.Prompt, error) 
 		return algo.Prompt{}, err
 	}
 
-	var prompt algo.Prompt
-	if err := go_json.Unmarshal([]byte(r.Prompt.String), &prompt); err != nil {
+	var productIDs []string
+	if err := go_json.Unmarshal([]byte(r.Prompt.String), &productIDs); err != nil {
 		return algo.Prompt{}, err
 	}
 
-	return prompt, nil
+	return algo.Prompt{
+		ProductIDs: productIDs,
+	}, nil
 }
 
 type promptResult struct {

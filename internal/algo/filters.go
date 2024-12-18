@@ -6,15 +6,10 @@ import (
 	"github.com/garrettladley/prods/internal/model/category"
 )
 
-var allFilters = [...]filter.Option{
-	filter.Categories(category.Categories[:]),
-	filter.Paginate(0, constants.ProductSubset),
-	filter.PriceBucketer(filter.AllPriceBuckets),
-	filter.StarBucketer(filter.AllStars),
-}
-
 func newFilter(opts ...filter.Option) *filter.Params {
-	return filter.New(append(opts, allFilters[:]...)...)
+	p := filter.New(opts...)
+	_ = p.Validate()
+	return p
 }
 
 var Filters = [...]*filter.Params{

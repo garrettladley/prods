@@ -19,13 +19,14 @@ func (db *DB) Solution(ctx context.Context, token uuid.UUID) (s algo.Solution, e
 		}
 	}
 
-	var solution [][]string
-	if err := go_json.Unmarshal([]byte(r.Solution.String), &solution); err != nil {
+	var orderedProductIDs [][]string
+	if err := go_json.Unmarshal([]byte(r.Solution.String), &orderedProductIDs); err != nil {
 		return s, err
 	}
 
-	s.OrderedProductIDs = solution
-	return s, nil
+	s.OrderedProductIDs = orderedProductIDs
+
+	return
 }
 
 type solutionResult struct {

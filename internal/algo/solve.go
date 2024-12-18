@@ -35,10 +35,10 @@ func (pf *ProductFilter) ApplyFilter(p *filter.Params) []string {
 	return pf.applyPagination(filtered, p.Offset, p.Limit)
 }
 
-func (pf ProductFilter) Solve(params []filter.Params) [][]string {
+func (pf ProductFilter) Solve(params []*filter.Params) [][]string {
 	results := make([][]string, len(params))
 	for i, p := range params {
-		results[i] = pf.ApplyFilter(&p)
+		results[i] = pf.ApplyFilter(p)
 	}
 	return results
 }
@@ -46,14 +46,14 @@ func (pf ProductFilter) Solve(params []filter.Params) [][]string {
 func (pf *ProductFilter) filterProducts(p *filter.Params) []product.Product {
 	filtered := make([]product.Product, 0, len(pf.products))
 	for _, prod := range pf.products {
-		if pf.meetsFilterCriteria(prod, p) {
+		if pf.meetsFilterCriteria(&prod, p) {
 			filtered = append(filtered, prod)
 		}
 	}
 	return filtered
 }
 
-func (pf *ProductFilter) meetsFilterCriteria(prod product.Product, p *filter.Params) bool {
+func (pf *ProductFilter) meetsFilterCriteria(prod *product.Product, p *filter.Params) bool {
 	if prod.Price < p.PriceMin || prod.Price > p.PriceMax {
 		return false
 	}
