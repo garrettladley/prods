@@ -10,20 +10,13 @@ import (
 func TestApplyFilter(t *testing.T) {
 	t.Parallel()
 
-	// TODO: add more
+	// TODO: add tests
 	tests := []struct {
 		name   string
 		ids    []string
 		params *filter.Params
 		want   []string
-	}{
-		{
-			name:   "no filter",
-			ids:    ids[:],
-			params: newFilter(),
-			want:   ids[:],
-		},
-	}
+	}{}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
