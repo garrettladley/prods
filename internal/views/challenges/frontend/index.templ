@@ -1,0 +1,83 @@
+package frontend
+
+import "github.com/garrettladley/prods/internal/views/layouts"
+
+templ Index() {
+	@layouts.Base() {
+		<div class="max-w-5xl mx-auto px-4 py-8 space-y-8">
+			<header>
+				<h1 class="text-4xl font-bold text-blue-600">Frontend Challenge</h1>
+			</header>
+			<section>
+				<h2 class="text-2xl font-semibold mb-4">Overview</h2>
+				<p class="leading-relaxed">
+					For the front-end challenge, you will implement a simple add-to-cart and checkout flow of a web-based application.
+					Feel free to use any tech stack you think would be best.
+				</p>
+			</section>
+			<section>
+				<h2 class="text-2xl font-semibold mb-4">Design Resources</h2>
+				<p class="mb-4">
+					Attached is a Figma file of the three screens that must be implemented. Try to follow the same design on the Figma as closely as possible.
+					As a Generate member, you will be tasked with implementing Figma screens your designers hand off to you, so we want to see how well you can do this.
+					There is also a component system provided within the file :)
+				</p>
+				<ul class="list-disc list-inside space-y-2">
+					<li>
+						<a href="https://www.figma.com/design/reKpbILCizcrTjnrBn6hzU/Generate-Coding-Challenge?node-id=1-4&t=TJE0J1NLf2icnkrT-1" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">
+							Figma Link
+						</a>
+					</li>
+					<li>
+						<a href="https://www.figma.com/design/reKpbILCizcrTjnrBn6hzU/Generate-Coding-Challenge?node-id=1-4&m=dev&t=TJE0J1NLf2icnkrT-1" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">
+							Figma Link in Dev Mode
+						</a>
+					</li>
+				</ul>
+			</section>
+			<section>
+				<h2 class="text-2xl font-semibold mb-4">Backend Integration</h2>
+				<p class="mb-4">
+					Try to populate the fields with data fetched from this API (insert API here). Each product will be fetched in the following structured format:
+				</p>
+				<pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto text-green-300 text-sm">
+					{ `type Product struct {
+    ID         string              // 8 runes, alphanumeric, case sensitive
+    Name       string              // name of the product
+    Categories []category.Category // between 1-3 categories
+    Stars      uint16              // representation of 0-5 stars, 2 decimal places
+    Price      uint32              // representation in cents
+}` }
+				</pre>
+			</section>
+			<section>
+				<h2 class="text-2xl font-semibold mb-4">Implementation Considerations</h2>
+				<ul class="list-disc list-outside space-y-2 pl-5">
+					<li>There probably aren't <em>always</em> going to just be three items to choose from to add to your cart... how would you handle fetching this data if there were <strong>pages</strong> of data? Perhaps a scroll component?</li>
+					<li>All three of these screens look kinda similar... how could you take advantage of that?</li>
+					<li>Parts of this page seem to need to be tracked if the user interacts with them, how can you manage these different <b>states</b>?</li>
+				</ul>
+			</section>
+			<section>
+				<h2 class="text-2xl font-semibold mb-4">Helpful Documentation</h2>
+				<ul class="list-disc list-inside space-y-2">
+					<li>
+						<a href="https://legacy.reactjs.org/docs/getting-started.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">
+							React Documentation
+						</a>
+					</li>
+					<li>
+						<a href="https://react.dev/learn/typescript" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">
+							React with TypeScript Documentation
+						</a>
+					</li>
+					<li>
+						<a href="https://tailwindcss.com/docs/guides/create-react-app" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">
+							Tailwind CSS Installation and Documentation
+						</a>
+					</li>
+				</ul>
+			</section>
+		</div>
+	}
+}

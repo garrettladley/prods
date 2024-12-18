@@ -1,17 +1,18 @@
 package server
 
 import (
-	"fmt"
 	"log/slog"
+	"net/http"
+	"strings"
 	"time"
 
-	"github.com/garrettladley/prods/internal/constants"
-	"github.com/garrettladley/prods/internal/server/handlers"
+	"github.com/garrettladley/prods/internal/handlers"
 	"github.com/garrettladley/prods/internal/xerr"
 	go_json "github.com/goccy/go-json"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -21,7 +22,8 @@ import (
 )
 
 type Config struct {
-	Logger *slog.Logger
+	Logger   *slog.Logger
+	StaticFn func(*fiber.App)
 }
 
 func New(cfg *Config) *fiber.App {
@@ -33,18 +35,12 @@ func New(cfg *Config) *fiber.App {
 	})
 	setupMiddleware(app, cfg)
 	setupHealthCheck(app)
+	setupFavicon(app)
 
 	// register routes here before 404 handler
 	service := handlers.NewService(nil)
-	app.Route(fmt.Sprintf("/api/v%d", constants.Version), func(r fiber.Router) {
-		r.Post("/register", service.Register)
-		r.Get("/token", service.Token)
-		r.Route("/:token", func(r fiber.Router) {
-			r.Get("/prompt", service.Prompt)
-			r.Post("/submit", service.Submit)
-		})
-		r.Get("/products", service.Products)
-	})
+	service.Routes(app)
+	cfg.StaticFn(app)
 
 	setup404Handler(app)
 
@@ -55,12 +51,19 @@ func setupMiddleware(app *fiber.App, cfg *Config) {
 	app.Use(recover.New())
 	app.Use(slogfiber.New(cfg.Logger))
 	app.Use(limiter.New(limiter.Config{
-		Max:               20,
+		Max:               256,
 		Expiration:        30 * time.Second,
 		LimiterMiddleware: limiter.SlidingWindow{},
 	}))
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestSpeed,
+	}))
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     strings.Join([]string{"https://prods.garrettladley.com", "http://prods.garrettladley.com", "http://127.0.0.1"}, ","),
+		AllowMethods:     strings.Join([]string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodOptions}, ","),
+		AllowHeaders:     strings.Join([]string{"Accept", "Authorization", "Content-Type"}, ","),
+		AllowCredentials: true,
+		MaxAge:           300,
 	}))
 }
 
@@ -70,6 +73,13 @@ func setupHealthCheck(app *fiber.App) {
 	})
 }
 
+func setupFavicon(app *fiber.App) {
+	app.Get("/favicon.ico", func(c *fiber.Ctx) error {
+		return c.SendStatus(http.StatusNoContent)
+	})
+}
+
+// TODO: create templ view
 func setup404Handler(app *fiber.App) {
 	app.Use(func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{

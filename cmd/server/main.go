@@ -37,10 +37,9 @@ func main() {
 	}
 
 	app := server.New(&server.Config{
-		Logger: logger,
+		Logger:   logger,
+		StaticFn: static,
 	})
-
-	static(app)
 
 	go func() {
 		if err := app.Listen(":" + settings.App.Port); err != nil {

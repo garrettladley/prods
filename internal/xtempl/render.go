@@ -1,4 +1,4 @@
-package templ
+package xtempl
 
 import (
 	"github.com/a-h/templ"
