@@ -22,7 +22,7 @@ import (
 //	@Param			sort		query		string			false	"Sort by field"												Enums(name, price, stars)	default(name)
 //	@Param			order		query		string			false	"Sort order"												Enums(asc, desc)			default(asc)
 //	@Param			categories	query		[]string		false	"Filter by categories"										Enums(electronics, apparel, home goods, sports, beauty, grocery, office supplies, outdoor, toys, health, automotive, luxury, books)"
-//	@Param			offset		query		uint			false	"Number of items to skip before starting to return results"	default(0)
+//	@Param			offset		query		uint			false	"Number of pages of size limit to skip"									default(0)
 //	@Param			limit		query		uint			false	"Maximum number of items to return"							default(3)
 //	@Param			price_min	query		uint32			false	"Minimum price in cents"									default(0)
 //	@Param			price_max	query		uint32			false	"Maximum price in cents"									default(4294967295)
