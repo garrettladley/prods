@@ -10,7 +10,10 @@ import (
 	"github.com/garrettladley/prods/internal/handlers"
 	"github.com/garrettladley/prods/internal/settings"
 	"github.com/garrettladley/prods/internal/storage"
+	"github.com/garrettladley/prods/internal/views/x404"
 	"github.com/garrettladley/prods/internal/xerr"
+	"github.com/garrettladley/prods/internal/xtempl"
+
 	go_json "github.com/goccy/go-json"
 
 	"github.com/gofiber/fiber/v2"
@@ -90,9 +93,6 @@ func setupFavicon(app *fiber.App) {
 // TODO: create templ view
 func setup404Handler(app *fiber.App) {
 	app.Use(func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": "Page not found",
-			"path":  c.Path(),
-		})
+		return xtempl.Render(c, x404.Index())
 	})
 }
