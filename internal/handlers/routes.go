@@ -2,16 +2,23 @@ package handlers
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/garrettladley/prods/internal/constants"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cache"
+	"github.com/gofiber/fiber/v2/utils"
 )
 
 func (s *Service) Routes(r fiber.Router) {
-	r.Get("/", s.Home)
-	r.Route("/challenges", func(r fiber.Router) {
-		r.Get("/frontend", s.Frontend)
+	cache := cache.New(cache.Config{
+		KeyGenerator: func(c *fiber.Ctx) string { return utils.CopyString(c.OriginalURL()) },
+		Expiration:   time.Hour * 24 * 365, // 1 year
+		CacheControl: true,
 	})
+
+	r.Get("/", cache, s.Home)
+	r.Get("/frontend", cache, s.Frontend)
 
 	r.Route(fmt.Sprintf("/api/v%d", constants.Major), func(router fiber.Router) {
 		r.Post("/register", s.Register)

@@ -17,9 +17,6 @@ install: install-templ gen-templ install-swag gen-swag
 	@go get ./...
 	@go mod tidy
 	@go mod download
-	@mkdir -p cmd/server/deps
-	@wget -q -O cmd/server/deps/htmx-2.0.3.min.js.gz https://unpkg.com/htmx.org@2.0.3/dist/htmx.min.js.gz
-	@gunzip -f cmd/server/deps/htmx-2.0.3.min.js.gz
 	@npm install -D tailwindcss
 
 
@@ -57,7 +54,5 @@ fmt-swag:
 
 .PHONY: ci-scaffold
 ci-scaffold:
-	@mkdir -p cmd/server/deps
-	@echo "hello world" > cmd/server/deps/hello.txt
 	@mkdir -p cmd/server/public
 	@echo "hello world" > cmd/server/public/hello.txt

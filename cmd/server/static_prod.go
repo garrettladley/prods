@@ -14,11 +14,3 @@ var publicFS embed.FS // nolint:unused
 func public() http.Handler {
 	return http.FileServerFS(publicFS)
 }
-
-//go:embed deps
-var depsFS embed.FS // nolint:unused
-
-// nolint:unused
-func deps() http.Handler {
-	return http.FileServerFS(depsFS)
-}

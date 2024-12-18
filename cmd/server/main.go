@@ -123,18 +123,10 @@ func main() {
 //go:embed public
 var PublicFS embed.FS
 
-//go:embed deps
-var DepsFS embed.FS
-
 func static(app *fiber.App) {
 	app.Use("/public", filesystem.New(filesystem.Config{
 		Root:       http.FS(PublicFS),
 		PathPrefix: "public",
-		Browse:     true,
-	}))
-	app.Use("/deps", filesystem.New(filesystem.Config{
-		Root:       http.FS(DepsFS),
-		PathPrefix: "deps",
 		Browse:     true,
 	}))
 }
