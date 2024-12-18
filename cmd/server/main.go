@@ -11,11 +11,27 @@ import (
 
 	"github.com/garrettladley/prods/internal/server"
 	"github.com/garrettladley/prods/internal/settings"
+	"github.com/garrettladley/prods/internal/storage/postgres"
 	"github.com/garrettladley/prods/internal/xslog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 )
 
+//	@title			Prods
+//	@version		1.0
+//	@description	Generate Spring 2025 Coding Challenge
+
+//	@contact.name	Garrett Ladley
+//	@contact.email	ladley.g@northeastern.edu
+
+//	@license.name	MIT
+//	@license.url	https://opensource.org/licenses/MIT
+
+//	@host		prods.garrettladley.com
+//	@BasePath	/
+
+// @externalDocs.description	OpenAPI
+// @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
 	handler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
@@ -36,7 +52,25 @@ func main() {
 		os.Exit(1)
 	}
 
+	store, err := postgres.New(postgres.Config{
+		DSN:             settings.DB.DSN,
+		MaxOpenConns:    settings.DB.MaxOpenConns,
+		MaxIdleConns:    settings.DB.MaxIdleConns,
+		ConnMaxLifetime: settings.DB.ConnMaxLifetime,
+	})
+	if err != nil {
+		slog.LogAttrs(
+			ctx,
+			slog.LevelError,
+			"failed to connect to database",
+			xslog.Error(err),
+		)
+		os.Exit(1)
+	}
+
 	app := server.New(&server.Config{
+		Storage:  &store,
+		Settings: &settings,
 		Logger:   logger,
 		StaticFn: static,
 	})

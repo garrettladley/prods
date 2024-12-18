@@ -1,12 +1,16 @@
 package server
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/garrettladley/prods/internal/constants"
 	"github.com/garrettladley/prods/internal/handlers"
+	"github.com/garrettladley/prods/internal/settings"
+	"github.com/garrettladley/prods/internal/storage"
 	"github.com/garrettladley/prods/internal/xerr"
 	go_json "github.com/goccy/go-json"
 
@@ -15,13 +19,18 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 
+	_ "embed"
+
+	"github.com/gofiber/swagger"
+
+	_ "github.com/garrettladley/prods/docs"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	slogfiber "github.com/samber/slog-fiber"
-
-	_ "embed"
 )
 
 type Config struct {
+	Settings *settings.Settings
+	Storage  storage.Storage
 	Logger   *slog.Logger
 	StaticFn func(*fiber.App)
 }
@@ -37,8 +46,8 @@ func New(cfg *Config) *fiber.App {
 	setupHealthCheck(app)
 	setupFavicon(app)
 
-	// register routes here before 404 handler
-	service := handlers.NewService(nil)
+	service := handlers.NewService(cfg.Storage)
+	app.Get(fmt.Sprintf("/api/v%d/docs/*", constants.Version), swagger.HandlerDefault)
 	service.Routes(app)
 	cfg.StaticFn(app)
 

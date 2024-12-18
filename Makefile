@@ -1,7 +1,7 @@
 NODE_BIN := ./node_modules/.bin
 
 .PHONY:build
-build: gen-css gen-templ
+build: gen-css gen-templ gen-swag
 	@go build -tags dev -o bin/prods cmd/server/main.go
 
 .PHONY:build-prod
@@ -13,7 +13,7 @@ run: build
 	@./bin/prods
 
 .PHONY: install
-install: install-templ gen-templ
+install: install-templ gen-templ install-swag gen-swag
 	@go get ./...
 	@go mod tidy
 	@go mod download
@@ -42,6 +42,18 @@ gen-templ:
 .PHONY: watch-templ
 watch-templ:
 	@templ generate --watch --proxy=http://127.0.0.1:8000
+
+.PHONY: install-swag
+install-swag:
+	@go install github.com/swaggo/swag/cmd/swag@latest
+
+.PHONY: gen-swag
+gen-swag:
+	@swag init -g cmd/server/main.go
+
+.PHONY: fmt-swag
+fmt-swag:
+	@swag fmt -g cmd/server/main.go
 
 .PHONY: ci-scaffold
 ci-scaffold:

@@ -22,6 +22,22 @@ type registerResponse struct {
 	Prompt algo.Prompt `json:"prompt"`
 }
 
+// Register godoc
+//
+//	@Summary		Register a new applicant
+//	@Description	Creates a new applicant registration with a unique token and challenge prompt.
+//	@Description	Note: Please store the challenge prompt locally; whether it be in memory, on disk, or in a database.
+//	@Tags			applicants
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		registerRequest		true	"Registration Request"
+//	@Success		201		{object}	registerResponse	"Successfully registered applicant"
+//	@Failure		400		{object}	xerr.APIError		"Invalid JSON"
+//	@Failure		409		{object}	xerr.APIError		"Email conflict"
+//	@Failure		422		{object}	xerr.APIError		"Unprocessable entity"
+//	@Failure		429		{object}	xerr.APIError		"Too many requests"
+//	@Failure		500		{object}	xerr.APIError		"Internal server error"
+//	@Router			/api/v1/register [post]
 func (s *Service) Register(c *fiber.Ctx) error {
 	var r registerRequest
 	if err := c.BodyParser(&r); err != nil {

@@ -23,6 +23,23 @@ type submitRequestBody struct {
 	URL string `json:"url"`
 }
 
+// Submit godoc
+//
+//	@Summary		Submit and score a solution
+//	@Description	Scores a solution by hitting the provided endpoint and checking against the expected solution.
+//	@Description	Note: Before checking your solution, we will make a GET request to the provided URL's `/health` endpoint.
+//	@Description	If this request does not return a 200 status code, the scoring process will exit, and you will receive a score of -1.
+//	@Tags			solutions
+//	@Accept			json
+//	@Produce		json
+//	@Param			token	path		string				true	"Submission token"	format(uuid)
+//	@Param			body	body		submitRequestBody	true	"Submission data containing the solution URL"
+//	@Success		201		{integer}	integer				"Solution successfully scored"
+//	@Failure		400		{object}	xerr.APIError		"Invalid token or malformed request body"
+//	@Failure		408		{object}	xerr.APIError		"Request timeout exceeded"
+//	@Failure		429		{object}	xerr.APIError		"Too many requests"
+//	@Failure		500		{object}	xerr.APIError		"Internal server error"
+//	@Router			/api/v1/submit/{token} [post]
 func (s *Service) Submit(c *fiber.Ctx) error {
 	rawToken := c.Params("token")
 	token, err := uuid.Parse(rawToken)
@@ -38,6 +55,16 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 
 	ctx, cancel := context.WithTimeout(c.Context(), 30*time.Second)
 	defer cancel()
+
+	ok, err := health(ctx, r.URL)
+	if err != nil || !ok {
+		score := -1
+		if err := s.storage.Submit(ctx, token, score); err != nil {
+			return err
+		}
+
+		return c.Status(http.StatusCreated).JSON(score)
+	}
 
 	eg, ctx := errgroup.WithContext(ctx)
 
@@ -74,7 +101,22 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Status(http.StatusCreated).JSON(-1)
+	return c.Status(http.StatusCreated).JSON(score)
+}
+
+func health(ctx context.Context, url string) (ok bool, err error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url+"/health", nil)
+	if err != nil {
+		return false, fmt.Errorf("failed to create request: %w", err)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return false, fmt.Errorf("failed to make request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	return resp.StatusCode == http.StatusOK, nil
 }
 
 func test(ctx context.Context, url string) ([][]product.Product, error) {
