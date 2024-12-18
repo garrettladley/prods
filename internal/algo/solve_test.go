@@ -36,6 +36,7 @@ func TestApplyFilter(t *testing.T) {
 	}
 }
 
+//nolint:unused
 var ids = [...]string{
 	product.AirPodsPro.ID,            // Electronics
 	product.LeviBluejeans.ID,         // Apparel

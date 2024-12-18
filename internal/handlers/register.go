@@ -26,6 +26,7 @@ type registerResponse struct {
 //
 //	@Summary		Register a new applicant
 //	@Description	Creates a new applicant registration with a unique token and challenge prompt.
+//	@Description	Only accepts your @northeastern.edu email.
 //	@Description	Note: Please store the challenge prompt locally; whether it be in memory, on disk, or in a database.
 //	@Tags			applicants
 //	@Accept			json
