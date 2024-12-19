@@ -9,10 +9,10 @@ type SortBy string
 const (
 	Price SortBy = "price"
 	Name  SortBy = "name"
-	Star  SortBy = "star"
+	Stars SortBy = "stars"
 )
 
-var SortByValues = []SortBy{Price, Name, Star}
+var SortByValues = []SortBy{Price, Name, Stars}
 
 type Order string
 

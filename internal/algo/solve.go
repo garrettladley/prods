@@ -82,7 +82,7 @@ func (pf *ProductFilter) compareProducts(a product.Product, b product.Product, s
 		return a.Price < b.Price
 	case filter.Name:
 		return a.Name < b.Name
-	case filter.Star:
+	case filter.Stars:
 		return a.Stars < b.Stars
 	default:
 		return true // default to original order

@@ -18,8 +18,8 @@ var Filters = [...]*filter.Params{
 	newFilter(filter.Sort(filter.Price, filter.Desc)),
 	newFilter(filter.Sort(filter.Name, filter.Asc)),
 	newFilter(filter.Sort(filter.Name, filter.Desc)),
-	newFilter(filter.Sort(filter.Star, filter.Asc)),
-	newFilter(filter.Sort(filter.Star, filter.Desc)),
+	newFilter(filter.Sort(filter.Stars, filter.Asc)),
+	newFilter(filter.Sort(filter.Stars, filter.Desc)),
 	// basic pagination
 	newFilter(filter.Paginate(0, constants.ProductSubset+5)),
 	newFilter(filter.Paginate(1, constants.ProductSubset)),
@@ -78,7 +78,7 @@ var Filters = [...]*filter.Params{
 		filter.Categories([]category.Category{category.Luxury, category.Beauty, category.Health}),
 		filter.PriceBucketer(filter.OverTwentyFive),
 		filter.StarBucketer(filter.FourPointFivePlus),
-		filter.Sort(filter.Star, filter.Desc),
+		filter.Sort(filter.Stars, filter.Desc),
 		filter.Paginate(0, constants.ProductSubset+5),
 	),
 }
