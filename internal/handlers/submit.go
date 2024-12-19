@@ -110,11 +110,15 @@ func (s *Service) submit(c *fiber.Ctx, ctx context.Context, token uuid.UUID, sco
 	})
 }
 
+const headerNgrokSkipBrowserWarning string = "ngrok-skip-browser-warning"
+
 func health(ctx context.Context, url string) (ok bool, err error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url+"/health", nil)
 	if err != nil {
 		return false, fmt.Errorf("failed to create request: %w", err)
 	}
+
+	req.Header.Set(headerNgrokSkipBrowserWarning, "true")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -139,6 +143,7 @@ func test(ctx context.Context, url string) ([][]product.Product, error) {
 					return fmt.Errorf("failed to create request: %w", err)
 				}
 				req.Header.Set(xhttp.HeaderContentType, xhttp.HeaderApplicationJSON)
+				req.Header.Set(headerNgrokSkipBrowserWarning, "true")
 
 				resp, err := http.DefaultClient.Do(req)
 				if err != nil {
