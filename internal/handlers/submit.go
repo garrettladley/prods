@@ -64,15 +64,18 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 
 	ok, err := health(baseCtx, r.URL)
 	if err != nil || !ok {
+		msg := "failed to perform a health check on your solution"
+
 		slog.LogAttrs(
 			baseCtx,
 			slog.LevelError,
-			"failed to perform a health check on your solution",
+			msg,
 			xslog.Error(err),
 			slog.String("token", token.String()),
 			slog.String("url", r.URL),
 		)
-		return s.submit(c, baseCtx, token, -1, "failed to perform a health check on your solution")
+
+		return s.submit(c, baseCtx, token, -1, msg)
 	}
 
 	eg, ctx := errgroup.WithContext(baseCtx)
