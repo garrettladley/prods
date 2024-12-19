@@ -35,7 +35,7 @@ func (s *Service) Routes(r fiber.Router) {
 		})
 
 		r.Route("/products", func(r fiber.Router) {
-			r.Get("/", s.Product)
+			r.Get("/", s.Products)
 			r.Get("/:id", s.Product)
 		})
 	},
