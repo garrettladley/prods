@@ -15,7 +15,7 @@ import (
 //	@Summary		Retrieve filtered products
 //	@Description	Fetches a list of products based on various filter parameters such as sorting, categories, price range, and star ratings.
 //	@Description	By default, all categories are included if none are specified.
-//	@Description	For categories, replace spaces with %20 and join with commas. For example, [office supplies, electronics ] becomes "?categories=office%20supplies,electronics".
+//	@Description	For categories, replace spaces with %20 and join with commas. For example, [ office supplies, electronics ] becomes "?categories=office%20supplies,electronics".
 //	@Tags			products
 //	@Accept			json
 //	@Produce		json
