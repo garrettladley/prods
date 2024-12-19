@@ -103,7 +103,6 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 			msg = "took too long to score your solution"
 		} else {
 			msg = "failed to score your solution"
-
 		}
 
 		slog.LogAttrs(
