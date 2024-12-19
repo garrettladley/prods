@@ -108,7 +108,7 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 		slog.LogAttrs(
 			baseCtx,
 			slog.LevelError,
-			"took too long to score your solution",
+			msg,
 			xslog.Error(err),
 			slog.String("token", token.String()),
 			slog.String("url", r.URL),
