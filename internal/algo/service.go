@@ -37,7 +37,7 @@ func (s *Service) Score(ctx context.Context, expected Solution, actual [][]produ
 			continue
 		}
 
-		var correct bool
+		correct := true
 	inner:
 		for exp, expectedID := range expectedIDs {
 			expectedProduct := product.Products[expectedID]
