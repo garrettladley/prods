@@ -1,0 +1,4 @@
+User-agent: *
+Crawl-delay: 120
+Disallow: /public/
+Sitemap: https://prods.garrettladley.com/sitemap.xml

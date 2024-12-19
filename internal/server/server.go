@@ -45,6 +45,8 @@ func New(cfg *Config) *fiber.App {
 	setupMiddleware(app, cfg)
 	setupHealthCheck(app)
 	setupFavicon(app)
+	setupRobotsTxt(app)
+	setupSiteMap(app)
 
 	service := handlers.NewService(cfg.Storage)
 	app.Get(constants.APIVersion+"/docs/*", etag.New(), swagger.HandlerDefault)
@@ -79,4 +81,22 @@ func setupFavicon(app *fiber.App) {
 
 func setup404Handler(app *fiber.App) {
 	app.Use(func(c *fiber.Ctx) error { return xtempl.Render(c, x404.Index()) })
+}
+
+//go:embed artifacts/robots.txt
+var robotsTxt string
+
+func setupRobotsTxt(app *fiber.App) {
+	app.Get("/robots.txt", func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusOK).SendString(robotsTxt)
+	})
+}
+
+//go:embed artifacts/sitemap.xml
+var sitemapXml string
+
+func setupSiteMap(app *fiber.App) {
+	app.Get("/sitemap.xml", func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusOK).SendString(sitemapXml)
+	})
 }
