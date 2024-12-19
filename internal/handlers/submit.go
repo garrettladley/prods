@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/garrettladley/prods/internal/model/product"
 	"github.com/garrettladley/prods/internal/xerr"
 	"github.com/garrettladley/prods/internal/xhttp"
+	"github.com/garrettladley/prods/internal/xslog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
@@ -62,6 +64,14 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 
 	ok, err := health(baseCtx, r.URL)
 	if err != nil || !ok {
+		slog.LogAttrs(
+			baseCtx,
+			slog.LevelError,
+			"failed to perform a health check on your solution",
+			xslog.Error(err),
+			slog.String("token", token.String()),
+			slog.String("url", r.URL),
+		)
 		return s.submit(c, baseCtx, token, -1, "failed to perform a health check on your solution")
 	}
 
@@ -88,11 +98,24 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 	})
 
 	if err := eg.Wait(); err != nil {
+		var msg string
 		if errors.Is(err, context.DeadlineExceeded) {
-			return s.submit(c, baseCtx, token, -1, "took too long to score your solution")
+			msg = "took too long to score your solution"
 		} else {
-			return s.submit(c, baseCtx, token, -1, "failed to score your solution")
+			msg = "failed to score your solution"
+
 		}
+
+		slog.LogAttrs(
+			baseCtx,
+			slog.LevelError,
+			"took too long to score your solution",
+			xslog.Error(err),
+			slog.String("token", token.String()),
+			slog.String("url", r.URL),
+		)
+
+		return s.submit(c, baseCtx, token, -1, msg)
 	}
 
 	score := s.algo.Score(baseCtx, expected, actual)
