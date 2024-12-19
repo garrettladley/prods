@@ -20,11 +20,22 @@ templ Index() {
 				<div class="mb-4">
 					<h3 class="text-xl font-semibold mb-4">Register</h3>
 					<p>
-						Register for the challenge. Upon registering, you will receive a unique subset of the products, which you will use to implement the <span class="font-mono text-blue-500">/api/v1/products</span> endpoint.
+						Register for the challenge. Upon registering, you will receive a unique subset of the product IDs, which you will use to implement the <span class="font-mono text-blue-500">/api/v1/products</span> endpoint.
 					</p>
 					<ul class="list-disc list-inside pl-4 space-y-2">
 						<li>
 							<a href="/api/v1/docs/index.html#/applicants/post_api_v1_register" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">API Docs</a>
+						</li>
+					</ul>
+				</div>
+				<div class="mb-4">
+					<h3 class="text-xl font-semibold mb-4">Fetch Your Products</h3>
+					<p>
+						Upon registration, you will receive a subset of product IDs. Use these IDs fetch the product details from the <span class="font-mono text-blue-500">/api/v1/products/:id</span> endpoint.
+					</p>
+					<ul class="list-disc list-inside pl-4 space-y-2">
+						<li>
+							<a href="/api/v1/docs/index.html#/products/get_api_v1_products__id_" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">API Docs</a>
 						</li>
 					</ul>
 				</div>

@@ -34,7 +34,10 @@ func (s *Service) Routes(r fiber.Router) {
 			r.Post("/submit", s.Submit)
 		})
 
-		r.Get("/products", s.Products)
+		r.Route("/products", func(r fiber.Router) {
+			r.Get("/", s.Product)
+			r.Get("/:id", s.Product)
+		})
 	},
 	)
 }
