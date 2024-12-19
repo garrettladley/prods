@@ -17,7 +17,7 @@ func (s *Service) Routes(r fiber.Router) {
 		CacheControl: true,
 	})
 
-	r.Route("/", func(router fiber.Router) {
+	r.Route("/", func(r fiber.Router) {
 		r.Use(etag.New())
 		r.Use(cache)
 		r.Get("/", s.Home)
