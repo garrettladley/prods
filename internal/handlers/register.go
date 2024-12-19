@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log/slog"
 	"time"
 
 	"github.com/garrettladley/prods/internal/algo"
@@ -42,7 +41,6 @@ type registerResponse struct {
 func (s *Service) Register(c *fiber.Ctx) error {
 	var r registerRequest
 	if err := c.BodyParser(&r); err != nil {
-		slog.Error("invalid JSON request data", "error", err)
 		return xerr.InvalidJSON()
 	}
 

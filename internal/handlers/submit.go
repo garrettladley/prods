@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log/slog"
 	"net/http"
 	"time"
 
@@ -23,19 +22,24 @@ type submitRequestBody struct {
 	URL string `json:"url"`
 }
 
+type submitResponseBody struct {
+	Score   int    `json:"score"`
+	Message string `json:"message"`
+}
+
 // Submit godoc
 //
 //	@Summary		Submit and score a solution
 //	@Description	Scores a solution by hitting the provided endpoint and checking against the expected solution.
 //	@Description	Before checking your solution, we will make a GET request to the provided URL's `/health` endpoint.
-//	@Description	If this request does not return a 200 status code, the scoring process will exit, and you will receive a score of -1.
-//	@Description	Your endpoint should be located at URL+"/api/v1/products".
+//	@Description	If the health check does not return a 200 status code, the scoring process will exit, and you will receive a score of -1.
+//	@Description	Your endpoint should be located at `URL+"/api/v1/products"`.
 //	@Tags			solutions
 //	@Accept			json
 //	@Produce		json
 //	@Param			token	path		string				true	"Submission token"	format(uuid)
 //	@Param			body	body		submitRequestBody	true	"Submission data containing the solution URL"
-//	@Success		201		{integer}	integer				"Solution successfully scored"
+//	@Success		201		{object}	submitResponseBody	"Solution scoring details"
 //	@Failure		400		{object}	xerr.APIError		"Invalid token or malformed request body"
 //	@Failure		408		{object}	xerr.APIError		"Request timeout exceeded"
 //	@Failure		429		{object}	xerr.APIError		"Too many requests"
@@ -50,7 +54,6 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 
 	var r submitRequestBody
 	if err := c.BodyParser(&r); err != nil {
-		slog.Error("invalid JSON request data", "error", err)
 		return xerr.InvalidJSON()
 	}
 
@@ -59,12 +62,7 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 
 	ok, err := health(baseCtx, r.URL)
 	if err != nil || !ok {
-		score := -1
-		if err := s.storage.Submit(baseCtx, token, score); err != nil {
-			return err
-		}
-
-		return c.Status(http.StatusCreated).JSON(score)
+		return s.submit(c, baseCtx, token, -1, "failed to perform a health check on your solution")
 	}
 
 	eg, ctx := errgroup.WithContext(baseCtx)
@@ -91,18 +89,25 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 
 	if err := eg.Wait(); err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
-			return xerr.Timeout("took too long to test your solution")
+			return s.submit(c, baseCtx, token, -1, "took too long to score your solution")
 		} else {
-			return err
+			return s.submit(c, baseCtx, token, -1, "failed to score your solution")
 		}
 	}
 
 	score := s.algo.Score(baseCtx, expected, actual)
-	if err := s.storage.Submit(baseCtx, token, score); err != nil {
+	return s.submit(c, baseCtx, token, score, "solution scored")
+}
+
+func (s *Service) submit(c *fiber.Ctx, ctx context.Context, token uuid.UUID, score int, message string) error {
+	if err := s.storage.Submit(ctx, token, score); err != nil {
 		return err
 	}
 
-	return c.Status(http.StatusCreated).JSON(score)
+	return c.Status(http.StatusCreated).JSON(submitResponseBody{
+		Score:   score,
+		Message: message,
+	})
 }
 
 func health(ctx context.Context, url string) (ok bool, err error) {
