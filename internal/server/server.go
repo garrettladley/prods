@@ -2,7 +2,6 @@ package server
 
 import (
 	"log/slog"
-	"net/http"
 	"time"
 
 	"github.com/garrettladley/prods/internal/constants"
@@ -71,19 +70,13 @@ func setupMiddleware(app *fiber.App, cfg *Config) {
 }
 
 func setupHealthCheck(app *fiber.App) {
-	app.Get("/health", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
-	})
+	app.Get("/health", func(c *fiber.Ctx) error { return c.SendStatus(fiber.StatusOK) })
 }
 
 func setupFavicon(app *fiber.App) {
-	app.Get("/favicon.ico", func(c *fiber.Ctx) error {
-		return c.SendStatus(http.StatusNoContent)
-	})
+	app.Get("/favicon.ico", func(c *fiber.Ctx) error { return c.SendStatus(fiber.StatusNoContent) })
 }
 
 func setup404Handler(app *fiber.App) {
-	app.Use(func(c *fiber.Ctx) error {
-		return xtempl.Render(c, x404.Index())
-	})
+	app.Use(func(c *fiber.Ctx) error { return xtempl.Render(c, x404.Index()) })
 }
