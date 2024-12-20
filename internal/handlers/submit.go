@@ -64,7 +64,13 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 
 	ok, err := health(baseCtx, r.URL)
 	if err != nil || !ok {
-		msg := "failed to perform a health check on your solution"
+		var msg string
+		if err != nil && errors.Is(err, context.DeadlineExceeded) {
+			msg = "took too long to perform a health check on your solution"
+			baseCtx = context.Background() // to avoid timeout on submission
+		} else {
+			msg = "failed to perform a health check on your solution"
+		}
 
 		slog.LogAttrs(
 			baseCtx,
