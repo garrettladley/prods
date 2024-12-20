@@ -104,6 +104,7 @@ func (s *Service) Submit(c *fiber.Ctx) error {
 		var msg string
 		if errors.Is(err, context.DeadlineExceeded) {
 			msg = "took too long to score your solution"
+			baseCtx = context.Background() // to avoid logging a timeout error
 		} else {
 			msg = "failed to score your solution"
 		}
