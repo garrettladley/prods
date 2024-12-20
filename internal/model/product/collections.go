@@ -66,7 +66,10 @@ func ChooseIDsRepresentingAllCategories(seed uint64, n uint) []string {
 
 	neededCount := int(n) - len(result)
 	if neededCount > 0 && len(remainingProducts) > 0 {
-		for _, i := range exprand.Perm(len(remainingProducts))[:min(neededCount, len(remainingProducts))] {
+		// only take up to the number of remaining products available
+		numToAdd := min(neededCount, len(remainingProducts))
+		perm := exprand.Perm(len(remainingProducts))[:numToAdd]
+		for _, i := range perm {
 			result = append(result, remainingProducts[i])
 		}
 	}
