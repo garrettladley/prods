@@ -11,7 +11,7 @@ import (
 )
 
 func (s *Service) Routes(r fiber.Router) {
-	_ = cache.New(cache.Config{
+	cache := cache.New(cache.Config{
 		KeyGenerator: func(c *fiber.Ctx) string { return utils.CopyString(c.OriginalURL()) },
 		Expiration:   time.Hour * 24 * 365, // 1 year
 		CacheControl: true,
@@ -19,6 +19,7 @@ func (s *Service) Routes(r fiber.Router) {
 
 	r.Route("/", func(r fiber.Router) {
 		r.Use(etag.New())
+		r.Use(cache)
 		r.Get("/", s.Home)
 		r.Get("/frontend", s.Frontend)
 		r.Get("/backend", s.Backend)
