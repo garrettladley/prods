@@ -18,11 +18,11 @@ func (s *Service) Routes(r fiber.Router) {
 	})
 
 	r.Route("/", func(r fiber.Router) {
-		r.Use(etag.New())
 		r.Use(cache)
 		r.Get("/", s.Home)
 		r.Get("/frontend", s.Frontend)
 		r.Get("/backend", s.Backend)
+		r.Use(etag.New())
 	})
 
 	r.Route(constants.APIVersion, func(r fiber.Router) {
