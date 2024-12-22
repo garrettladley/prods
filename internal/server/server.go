@@ -66,10 +66,7 @@ func setupMiddleware(app *fiber.App, cfg *Config) {
 			WithRequestID:      true,
 			WithRequestBody:    true,
 			WithRequestHeader:  true,
-			WithResponseBody:   true,
 			WithResponseHeader: true,
-			WithSpanID:         true,
-			WithTraceID:        true,
 		},
 	))
 	app.Use(limiter.New(limiter.Config{
