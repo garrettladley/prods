@@ -45,6 +45,7 @@ func TestChooseIDsWithAllCategories(t *testing.T) {
 			wantCats: false,
 		},
 		{
+			// FIXME: flaky because of duplicate IDs
 			name:     "large number",
 			seed:     5,
 			n:        50,
