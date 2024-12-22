@@ -62,10 +62,14 @@ func setupMiddleware(app *fiber.App, cfg *Config) {
 	app.Use(recover.New())
 	app.Use(slogfiber.NewWithConfig(cfg.Logger,
 		slogfiber.Config{
+			WithUserAgent:      true,
 			WithRequestID:      true,
 			WithRequestBody:    true,
 			WithRequestHeader:  true,
+			WithResponseBody:   true,
 			WithResponseHeader: true,
+			WithSpanID:         true,
+			WithTraceID:        true,
 		},
 	))
 	app.Use(limiter.New(limiter.Config{
