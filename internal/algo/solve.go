@@ -90,6 +90,7 @@ func (pf *ProductFilter) compareProducts(a product.Product, b product.Product, s
 }
 
 func (pf *ProductFilter) applyPagination(products []product.Product, offset uint, limit uint) []string {
+	// FIXME: we want to skip offset num of pages of size limit
 	start := int(offset)
 	end := start + int(limit)
 
