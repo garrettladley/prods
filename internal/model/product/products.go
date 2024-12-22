@@ -396,7 +396,7 @@ var (
 	}
 
 	FitbitCharge5 = Product{
-		ID:         "FIT13580",
+		ID:         "FIT13580", // FIXME: ID is duplicated
 		Name:       "Fitbit Charge 5 Fitness Tracker",
 		Categories: []category.Category{category.Electronics, category.Sports},
 		Stars:      412,
