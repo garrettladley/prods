@@ -68,10 +68,8 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 	slog.LogAttrs(
 		c.Context(),
 		slog.LevelError,
-		"HTTP API error",
+		"Error handling request",
 		xslog.Error(err),
-		slog.String("method", c.Method()),
-		slog.String("path", c.Path()),
 	)
 
 	return c.Status(apiErr.StatusCode).JSON(apiErr)
