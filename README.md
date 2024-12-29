@@ -17,4 +17,4 @@ A challenge to test applicants' abilities to:
 - Consider errors vs good defaults
 
 Based on the following diagram:
-<img src="xdocs/backend.png" height="50%" width="50%" alt="Rough sketch of the challenge flow">
+![Rough sketch of the challenge flow](xdocs/backend.png)
