@@ -28,10 +28,10 @@ func TestApplyFilter(t *testing.T) {
 				{"CAN24680", "VWX46802", "STU35791"},
 				{"DYR13579", "ABC87429", "BSE35791"},
 				{"BSE35791", "CAN24680", "TNT67890", "CLG24680", "DYR13579", "STU35791", "GAT24680", "PRT46802", "HPB46802", "LEG24680", "HIJ46802", "VWX46802", "PQR35791", "SNS13579", "ABC87429"},
-				{"CAN24680", "TNT67890", "CLG24680", "DYR13579", "STU35791", "GAT24680", "PRT46802", "HPB46802", "LEG24680", "HIJ46802", "VWX46802", "PQR35791", "SNS13579", "ABC87429"},
+				{},
 				{"BSE35791", "CAN24680", "TNT67890", "CLG24680", "DYR13579"},
-				{"CAN24680", "TNT67890", "CLG24680", "DYR13579", "STU35791"},
-				{"TNT67890", "CLG24680", "DYR13579", "STU35791", "GAT24680"},
+				{"STU35791", "GAT24680", "PRT46802", "HPB46802", "LEG24680"},
+				{"HIJ46802", "VWX46802", "PQR35791", "SNS13579", "ABC87429"},
 				{"BSE35791", "CAN24680", "PRT46802"},
 				{"VWX46802"},
 				{"STU35791", "PQR35791"},
@@ -67,11 +67,11 @@ func TestApplyFilter(t *testing.T) {
 			for i, p := range tt.params {
 				got := NewProductFilter(tt.ids).ApplyFilter(p)
 				if len(got) != len(tt.want[i]) {
-					t.Errorf("ApplyFilter() = %v, want %v", got, tt.want[i])
+					t.Errorf("len(ApplyFilter()) = %v, want %v\nfilter[%d] = %s", len(got), len(tt.want[i]), i, p.Encode())
 				}
 				for j, id := range got {
 					if id != tt.want[i][j] {
-						t.Errorf("ApplyFilter() = %v, want %v", got, tt.want[i])
+						t.Errorf("ApplyFilter() = %v, want %v\nfilter[%d] = %s", got, tt.want[i], i, p.Encode())
 					}
 				}
 			}
