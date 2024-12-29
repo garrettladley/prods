@@ -23,58 +23,87 @@ func initCategoryMap() map[category.Category][]string {
 	return m
 }
 
+// selects n product IDs ensuring all categories are represented.
+// returns nil if n is less than the number of categories.
 func ChooseIDsRepresentingAllCategories(seed uint64, n uint) []string {
 	if n < uint(len(category.Categories)) {
 		return nil
 	}
 
-	selected := make(map[string]bool)
+	exprand.Seed(seed)
+	selected := make(map[string]struct{}, n)
 	result := make([]string, 0, n)
 
-	exprand.Seed(seed)
+	// first, ensure at least one product from each category is selected
+	if !selectOnePerCategory(selected, &result) {
+		return nil // could not find products for all categories
+	}
+
+	// fill remaining slots with random products
+	fillRemainingSlots(selected, &result, int(n))
+
+	return result
+}
+
+// attempt to select one product from each category
+func selectOnePerCategory(selected map[string]struct{}, result *[]string) bool {
 	for _, cat := range category.Categories {
 		products := categoryToProducts[cat]
 		if len(products) == 0 {
-			continue
+			return false
 		}
 
-		var found bool
-		for _, i := range exprand.Perm(len(products)) {
-			if !selected[products[i]] {
-				selected[products[i]] = true
-				result = append(result, products[i])
-				found = true
-				break
-			}
+		if !selectProductFromCategory(products, selected, result) {
+			return false
 		}
+	}
+	return true
+}
 
-		if !found && len(products) > 0 {
-			randProduct := products[exprand.Intn(len(products))]
-			if !selected[randProduct] {
-				selected[randProduct] = true
-				result = append(result, randProduct)
-			}
+// attempt to select an unselected product from the given category
+func selectProductFromCategory(products []string, selected map[string]struct{}, result *[]string) bool {
+	// try to find an unselected product
+	for _, i := range exprand.Perm(len(products)) {
+		if _, ok := selected[products[i]]; !ok {
+			selected[products[i]] = struct{}{}
+			*result = append(*result, products[i])
+			return true
 		}
 	}
 
-	remainingProducts := make([]string, 0)
+	// if all products in category were selected, pick any product from category
+	randProduct := products[exprand.Intn(len(products))]
+	if _, ok := selected[randProduct]; !ok {
+		selected[randProduct] = struct{}{}
+		*result = append(*result, randProduct)
+		return true
+	}
+
+	return false
+}
+
+// fill the remaining slots with random unselected products
+func fillRemainingSlots(selected map[string]struct{}, result *[]string, targetCount int) {
+	if len(*result) >= targetCount {
+		return
+	}
+
+	remainingProducts := make([]string, 0, len(IDs)-len(selected))
 	for _, id := range IDs {
-		if !selected[id] {
+		if _, ok := selected[id]; !ok {
 			remainingProducts = append(remainingProducts, id)
 		}
 	}
 
-	neededCount := int(n) - len(result)
-	if neededCount > 0 && len(remainingProducts) > 0 {
-		// only take up to the number of remaining products available
-		numToAdd := min(neededCount, len(remainingProducts))
-		perm := exprand.Perm(len(remainingProducts))[:numToAdd]
-		for _, i := range perm {
-			result = append(result, remainingProducts[i])
-		}
+	numToAdd := min(targetCount-len(*result), len(remainingProducts))
+	if numToAdd <= 0 {
+		return
 	}
 
-	return result
+	perm := exprand.Perm(len(remainingProducts))[:numToAdd]
+	for _, i := range perm {
+		*result = append(*result, remainingProducts[i])
+	}
 }
 
 var IDs = [100]string{
