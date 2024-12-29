@@ -13,7 +13,7 @@ run: build
 	@./bin/prods
 
 .PHONY: install
-install: install-templ install-swag gen-swag gen-templ
+install: install-templ install-swag gen-swag gen-templ gen-css
 	@go get ./...
 	@go mod tidy
 	@go mod download
