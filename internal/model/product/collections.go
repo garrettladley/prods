@@ -10,9 +10,9 @@ func ChooseIDs(seed uint64, n uint) []string {
 	return rand.ChooseN(seed, n, IDs[:]...)
 }
 
-var categoryToProducts = initCategoryMap()
+var categoryToProducts map[category.Category][]string
 
-func initCategoryMap() map[category.Category][]string {
+func init() {
 	m := make(map[category.Category][]string)
 	for _, productID := range IDs {
 		product := Products[productID]
@@ -20,7 +20,7 @@ func initCategoryMap() map[category.Category][]string {
 			m[cat] = append(m[cat], productID)
 		}
 	}
-	return m
+	categoryToProducts = m
 }
 
 // selects n product IDs ensuring all categories are represented.
