@@ -35,7 +35,7 @@ func (pf *ProductFilter) ApplyFilter(p *filter.Params) []string {
 	return pf.applyPagination(filtered, p.Offset, p.Limit)
 }
 
-func (pf ProductFilter) Solve(params []*filter.Params) [][]string {
+func (pf *ProductFilter) Solve(params []*filter.Params) [][]string {
 	results := make([][]string, len(params))
 	for i, p := range params {
 		results[i] = pf.ApplyFilter(p)
@@ -90,8 +90,7 @@ func (pf *ProductFilter) compareProducts(a product.Product, b product.Product, s
 }
 
 func (pf *ProductFilter) applyPagination(products []product.Product, offset uint, limit uint) []string {
-	// FIXME: we want to skip offset num of pages of size limit
-	start := int(offset)
+	start := int(offset * limit)
 	end := start + int(limit)
 
 	if start > len(products) {
