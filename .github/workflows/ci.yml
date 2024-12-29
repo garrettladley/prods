@@ -82,8 +82,8 @@ jobs:
         run: sudo apt-get install make
       - name: make install
         run: make install
-      - name: make ci-scaffold
-        run : make ci-scaffold
+      - name: make ci/scaffold
+        run : make ci/scaffold
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v5
         with:
@@ -120,8 +120,8 @@ jobs:
         run: sudo apt-get install make
       - name: make install
         run: make install
-      - name: make ci-scaffold
-        run : make ci-scaffold
+      - name: make ci/scaffold
+        run : make ci/scaffold
       - name: Run Tests with Coverage
         run: go test -v -race -coverprofile=coverage.txt ./...
       - name: Print Coverage

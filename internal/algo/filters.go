@@ -83,9 +83,10 @@ var Filters = [...]*filter.Params{
 	),
 }
 
-var EncodedFilters = make([]string, len(Filters))
+var EncodedFilters []string
 
 func init() {
+	EncodedFilters = make([]string, len(Filters))
 	for i, f := range Filters {
 		EncodedFilters[i] = f.Encode()
 	}
