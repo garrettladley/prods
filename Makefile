@@ -1,11 +1,11 @@
 NODE_BIN := ./node_modules/.bin
 
 .PHONY:build
-build: gen-css gen-templ gen-swag
+build: gen-css gen-swag gen-templ
 	@go build -tags dev -o bin/prods cmd/server/main.go
 
 .PHONY:build-prod
-build-prod: gen-css gen-templ
+build-prod: gen-css gen-swag gen-templ
 	@go build -tags prod -o bin/prods cmd/server/main.go
 
 .PHONY:run
@@ -13,7 +13,7 @@ run: build
 	@./bin/prods
 
 .PHONY: install
-install: install-templ gen-templ install-swag gen-swag
+install: install-templ install-swag gen-swag gen-templ
 	@go get ./...
 	@go mod tidy
 	@go mod download

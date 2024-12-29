@@ -2,9 +2,7 @@ package main
 
 import (
 	"context"
-	"embed"
 	"log/slog"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -16,7 +14,7 @@ import (
 	"github.com/garrettladley/prods/internal/storage/postgres"
 	"github.com/garrettladley/prods/internal/xslog"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/filesystem"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
 )
 
 //	@title			Prods
@@ -120,13 +118,6 @@ func main() {
 	)
 }
 
-//go:embed public
-var PublicFS embed.FS
-
 func static(app *fiber.App) {
-	app.Use("/public", filesystem.New(filesystem.Config{
-		Root:       http.FS(PublicFS),
-		PathPrefix: "public",
-		Browse:     true,
-	}))
+	app.Get("/public/*", adaptor.HTTPHandler(public()))
 }
