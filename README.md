@@ -9,7 +9,7 @@ A challenge to test applicants' abilities to:
 - Consider errors vs good defaults
 
 Based on the following diagram:
-![Backend flow diagram](xdocs/backend.png)
+![Rough sketch of the challenge flow](xdocs/backend.png)
 
 ## Frontend
 A challenge to test applicants' abilities to:
