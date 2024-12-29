@@ -14,6 +14,7 @@ func TestChooseIDsWithAllCategories(t *testing.T) {
 		seed     uint64
 		n        uint
 		wantLen  int
+		wantNil  bool // should the result be nil
 		wantCats bool // should all categories be represented
 	}{
 		{
@@ -21,6 +22,7 @@ func TestChooseIDsWithAllCategories(t *testing.T) {
 			seed:     1,
 			n:        uint(len(category.Categories)),
 			wantLen:  len(category.Categories),
+			wantNil:  false,
 			wantCats: true,
 		},
 		{
@@ -28,6 +30,7 @@ func TestChooseIDsWithAllCategories(t *testing.T) {
 			seed:     2,
 			n:        uint(len(category.Categories) + 5),
 			wantLen:  len(category.Categories) + 5,
+			wantNil:  false,
 			wantCats: true,
 		},
 		{
@@ -35,6 +38,7 @@ func TestChooseIDsWithAllCategories(t *testing.T) {
 			seed:     3,
 			n:        uint(len(category.Categories) - 5),
 			wantLen:  0,
+			wantNil:  true,
 			wantCats: false,
 		},
 		{
@@ -42,14 +46,15 @@ func TestChooseIDsWithAllCategories(t *testing.T) {
 			seed:     4,
 			n:        0,
 			wantLen:  0,
+			wantNil:  true,
 			wantCats: false,
 		},
 		{
-			// FIXME: flaky because of duplicate IDs
 			name:     "large number",
 			seed:     5,
 			n:        50,
 			wantLen:  50,
+			wantNil:  false,
 			wantCats: true,
 		},
 	}
@@ -57,10 +62,17 @@ func TestChooseIDsWithAllCategories(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			got := ChooseIDsRepresentingAllCategories(tt.seed, tt.n)
 
 			if len(got) != tt.wantLen {
 				t.Errorf("len(ChooseIDsWithAllCategories()) = %v, want %v", len(got), tt.wantLen)
+			}
+
+			if tt.wantNil {
+				if got != nil {
+					t.Errorf("ChooseIDsWithAllCategories() = %v, want nil", got)
+				}
 			}
 
 			if tt.wantCats {
