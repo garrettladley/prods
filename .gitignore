@@ -1,14 +1,9 @@
 .DS_Store
 .env
 bin/
-tmp/
-htmx/
 *_templ.go
 *_templ.txt
-cmd/server/deps/*
-!cmd/server/deps/.gitkeep
 cmd/server/public/*
-!cmd/server/public/.gitkeep
 node_modules/
 package-lock.json
 package.json
